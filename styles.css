@@ -858,3 +858,17 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
   .profile-copy { min-width:0; }
   .profile-intro,.profile-approach { max-width:100%; }
 }
+
+/* MOBILE SINGLE-LINE TAG RAILS */
+@media (max-width:720px) {
+  .profile-credentials .profile-skills,.profile-tools {
+    width:100%; flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+    padding:2px 18px 8px 0; scroll-snap-type:x proximity;
+    overscroll-behavior-inline:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .profile-credentials .profile-skills::-webkit-scrollbar,.profile-tools::-webkit-scrollbar { display:none; }
+  .profile-credentials .profile-skills span,.profile-tools span {
+    flex:0 0 auto; white-space:nowrap; scroll-snap-align:start;
+  }
+}
