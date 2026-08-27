@@ -27,6 +27,9 @@
     let scene = null;
     let keyLight = null;
     let visible = true;
+    let orientationReady = false;
+    let orientationPermissionRequested = false;
+    let orientationResetTimer = 0;
 
     function applyConfig(next=readConfig()) {
       config = next;
@@ -46,8 +49,36 @@
     }
 
     function resetTarget() {
+      if (orientationReady) return;
       target = {x:0, y:0, active:false};
       root.classList.remove('is-active');
+    }
+
+    function setOrientationTarget(event) {
+      if (reduced.matches) return;
+      const gamma = Number(event.gamma);
+      const beta = Number(event.beta);
+      if (!Number.isFinite(gamma) || !Number.isFinite(beta)) return;
+      target = {
+        x:clamp(gamma / 28, -1, 1),
+        y:clamp((beta - 45) / 28, -1, 1),
+        active:true
+      };
+      orientationReady = true;
+      root.classList.add('is-active');
+    }
+
+    function enableOrientation() {
+      if (orientationPermissionRequested || !('DeviceOrientationEvent' in window)) return;
+      orientationPermissionRequested = true;
+      const permissionRequest = typeof DeviceOrientationEvent.requestPermission === 'function'
+        ? DeviceOrientationEvent.requestPermission()
+        : Promise.resolve('granted');
+      Promise.resolve(permissionRequest).then(permission => {
+        if (permission === 'granted' || permission === undefined) {
+          window.addEventListener('deviceorientation', setOrientationTarget, {passive:true});
+        }
+      }).catch(() => {});
     }
 
     function resize() {
@@ -150,9 +181,20 @@
       }, undefined, () => fallback?.classList.remove('is-hidden'));
     }
 
-    root.addEventListener('pointermove', setTarget);
-    root.addEventListener('pointerleave', resetTarget);
-    root.addEventListener('pointercancel', resetTarget);
+    root.addEventListener('pointerdown', event => {
+      enableOrientation();
+      if (event.pointerType !== 'mouse') setTarget(event);
+    }, {passive:true});
+    root.addEventListener('pointermove', event => {
+      if (!orientationReady || event.pointerType === 'mouse') setTarget(event);
+    }, {passive:true});
+    root.addEventListener('pointerleave', resetTarget, {passive:true});
+    root.addEventListener('pointercancel', resetTarget, {passive:true});
+    root.addEventListener('pointerup', () => {
+      if (orientationReady) return;
+      window.clearTimeout(orientationResetTimer);
+      orientationResetTimer = window.setTimeout(resetTarget, 180);
+    }, {passive:true});
     window.addEventListener('storage', event => { if (event.key === STORAGE_KEY) applyConfig(); });
     if ('BroadcastChannel' in window) {
       const channel = new BroadcastChannel('cky-portfolio-sync');
@@ -165,3 +207,6 @@
     requestAnimationFrame(tick);
   });
 })();
+
+
+

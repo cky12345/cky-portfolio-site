@@ -844,3 +844,17 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
 @media (prefers-reduced-motion:reduce) {
   .profile-avatar-depth,.profile-avatar-fallback,.profile-avatar-glass { transition:none !important; }
 }
+
+/* MOBILE FILTER + PROFILE FIX */
+@media (max-width:720px) {
+  .project-card.is-hidden,.group-divider.is-hidden { display:none !important; }
+  .filters { touch-action:pan-x; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .filters::-webkit-scrollbar { display:none; }
+  .filter { touch-action:manipulation; }
+}
+@media (max-width:900px) and (min-width:721px) {
+  .profile-grid { grid-template-columns:minmax(0,1fr); gap:38px; }
+  .profile-portrait { width:min(58vw,330px); justify-self:start; transform:none; }
+  .profile-copy { min-width:0; }
+  .profile-intro,.profile-approach { max-width:100%; }
+}
