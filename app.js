@@ -268,10 +268,11 @@ function renderProjects(filter='all') {
     const projectMeta = getProjectMeta(p);
     const groupKey = encodeURIComponent(projectMeta.group);
     const hidden = filter !== 'all' && groupKey !== filter ? ' is-hidden' : '';
+    const filterFirst = filter !== 'all' && groupKey === filter ? ' is-filter-first' : '';
     const groupColor = getGroupColor(projectMeta.group, orderedGroups);
     const groupCount = orderedProjects.filter(project => getProjectMeta(project).group === projectMeta.group).length;
     const groupIndex = String(orderedGroups.indexOf(projectMeta.group) + 1).padStart(2,'0');
-    const groupHeader = projectMeta.group !== previousGroup ? `<div class="group-divider${hidden}" data-group-key="${groupKey}" style="--group-color:${groupColor}"><span class="group-index">${groupIndex}</span><div><small>CAPABILITY / GROUP ${groupIndex}</small><strong>${escapeHtml(projectMeta.group)}</strong></div><em>${String(groupCount).padStart(2,'0')} PROJECT${groupCount > 1 ? 'S' : ''}</em></div>` : '';
+    const groupHeader = projectMeta.group !== previousGroup ? `<div class="group-divider${hidden}${filterFirst}" data-group-key="${groupKey}" style="--group-color:${groupColor}"><span class="group-index">${groupIndex}</span><div><small>CAPABILITY / GROUP ${groupIndex}</small><strong>${escapeHtml(projectMeta.group)}</strong></div><em>${String(groupCount).padStart(2,'0')} PROJECT${groupCount > 1 ? 'S' : ''}</em></div>` : '';
     previousGroup = projectMeta.group;
     const sub = p.kind === 'series' ? `${projectMeta.subtitle} · ${p.clips.length} 个片段` : projectMeta.subtitle;
     const cardImage = getClipFrames(getPrimaryClip(p))[0]?.src || p.image;
@@ -621,3 +622,5 @@ renderFilters();
 bindFilterEvents();
 activateFilter();
 bindScrollAwareCardHover();
+
+
