@@ -872,3 +872,15 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
     flex:0 0 auto; white-space:nowrap; scroll-snap-align:start;
   }
 }
+
+/* MOBILE TAG GRID */
+@media (max-width:720px) {
+  .profile-credentials .profile-skills,.profile-tools {
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%; gap:8px; overflow:visible; padding:2px 0 8px;
+    scroll-snap-type:none;
+  }
+  .profile-credentials .profile-skills span,.profile-tools span {
+    width:100%; min-width:0; text-align:center; white-space:nowrap;
+  }
+}
