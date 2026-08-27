@@ -444,7 +444,8 @@ function loadClip(project, clip) {
   activeProject = project; activeClip = clip;
   const projectMeta = getProjectMeta(project);
   const clipMeta = getContentMeta(clip, project);
-  document.querySelector('#modal-title').textContent = `${projectMeta.title} / ${clipMeta.title}`;
+  document.querySelector('#modal-title').textContent = projectMeta.title;
+  document.querySelector('#modal-subtitle').textContent = clipMeta.title;
   document.querySelector('#modal-desc').textContent = clipMeta.description || projectMeta.desc;
   document.querySelector('#modal-role').textContent = project.role;
   document.querySelector('#modal-format').textContent = clip.format || project.format;

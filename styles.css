@@ -680,6 +680,36 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
 .modal-panel { border-radius:18px; }
 .modal-close,.cover-play { border-radius:50%; }
 
+/* Keep the modal itself scrollable on tall-content layouts. The fluid-glass
+   surface sets overflow:hidden for its decorative lens, which otherwise
+   clips the detail panel on wide, short viewports. */
+.modal-panel {
+  position:absolute;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+/* Reserve a small header lane for the close control so the kicker/title can
+   never sit underneath it at intermediate desktop widths. */
+.modal-header { position:relative; z-index:1; padding-right:58px; }
+.modal-panel > .modal-close { position:absolute; top:18px; right:22px; z-index:4; }
+.modal-panel > .modal-close {
+  width:36px; height:36px; border:0; border-radius:var(--radius-control);
+  background:rgba(109,88,255,.08); color:var(--accent-bright);
+  box-shadow:none; transition:background .2s,color .2s,transform .2s;
+}
+.modal-panel > .modal-close:hover { background:rgba(109,88,255,.24); color:#fff; transform:rotate(90deg); }
+.modal-panel > .modal-close:focus-visible { outline:2px solid rgba(143,131,255,.8); outline-offset:3px; }
+
+/* Keep the work/clip name on its own line with a quieter, technical voice. */
+.modal-subtitle {
+  display:block; max-width:650px; margin:-2px 0 20px;
+  color:#a5a8b4; font:500 clamp(14px,1.25vw,18px)/1.45 'DM Mono',var(--ui-readable);
+  letter-spacing:.04em;
+}
+
 /* Keep footer information above the decorative word and prevent glass highlights crossing text. */
 .site-footer { grid-template-columns:minmax(0,1fr) 310px; gap:54px; padding-top:168px; }
 .site-footer::before {
@@ -758,6 +788,8 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
   .sidebar-collapse { display:none; }
   .profile-credentials { grid-template-columns:1fr; gap:18px; margin-top:32px; }
   .profile-education { grid-template-columns:auto minmax(0,1fr); gap:14px; }
+  .modal-header { padding-right:46px; }
+  .modal-subtitle { margin:-2px 0 18px; font-size:14px; line-height:1.5; }
 }
 
 @media (prefers-reduced-motion:reduce) {
