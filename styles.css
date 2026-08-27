@@ -944,3 +944,8 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
   .hero-lede br,.approach-break { display:none; }
   .profile-approach p { max-width:100%; text-wrap:pretty; }
 }
+
+/* MOBILE COPY SEGMENTS */
+@media (max-width:720px) {
+  .hero-lede br,.approach-break { display:block; }
+}
