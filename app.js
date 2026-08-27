@@ -48,7 +48,14 @@ const GROUP_STORAGE_KEY = 'cky-portfolio-group-config-v1';
 const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
-const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'resume/陈坤勇_VOGUE定向简历.pdf' };
+const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'./resume/陈坤勇_VOGUE定向简历.pdf' };
+const normalizeResumeHref = value => {
+  const href = String(value || '').trim();
+  if (!href) return DEFAULT_RESUME.href;
+  if (/^(?:https?:|blob:|data:|\/)/i.test(href)) return href;
+  const clean = href.replace(/^\.\//, '');
+  return /^resume\//i.test(clean) ? './' + clean : './resume/' + clean;
+};
 const EMBEDDED_CONFIG = window.__CKY_PORTFOLIO_CONFIG__ || {};
 const CATEGORY_LABELS = { editorial:'时尚 / 编辑', brand:'品牌 / 3D', system:'内容系统', composite:'AI / 合成' };
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
@@ -128,8 +135,10 @@ function readResumeConfig() {
   try {
     const raw = localStorage.getItem(RESUME_STORAGE_KEY);
     const value = raw !== null ? JSON.parse(raw) : EMBEDDED_CONFIG.resume;
-    return value?.href ? value : DEFAULT_RESUME;
-  } catch { return EMBEDDED_CONFIG.resume?.href ? EMBEDDED_CONFIG.resume : DEFAULT_RESUME; }
+    return value?.href ? {...value, href:normalizeResumeHref(value.href)} : DEFAULT_RESUME;
+  } catch {
+    return EMBEDDED_CONFIG.resume?.href ? {...EMBEDDED_CONFIG.resume, href:normalizeResumeHref(EMBEDDED_CONFIG.resume.href)} : DEFAULT_RESUME;
+  }
 }
 function applyResumeConfig() {
   const resume = readResumeConfig();
@@ -137,31 +146,10 @@ function applyResumeConfig() {
   const download = document.querySelector('#resume-download');
   if (view) view.href = resume.href;
   if (download) {
-    download.href = resume.href;
+    const downloadHref = window.__CKY_RESUME_DATA_URL__ && resume.href === DEFAULT_RESUME.href ? window.__CKY_RESUME_DATA_URL__ : resume.href;
+    download.href = downloadHref;
     download.setAttribute('download', resume.name || DEFAULT_RESUME.name);
-    download.onclick = async event => {
-      event.preventDefault();
-      const filename = resume.name || DEFAULT_RESUME.name;
-      try {
-        const response = await fetch(resume.href);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const blobUrl = URL.createObjectURL(await response.blob());
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1200);
-      } catch {
-        const link = document.createElement('a');
-        link.href = resume.href;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      }
-    };
+    download.onclick = null;
   }
 }
 function getAllProjects() {
