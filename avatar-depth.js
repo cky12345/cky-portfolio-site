@@ -104,8 +104,9 @@
       fillLight.position.set(2, .5, 2);
       scene.add(fillLight);
       const loader = new THREE.TextureLoader();
-      loader.load('avatar-cutout.png', colorTexture => {
-        loader.load('avatar-depth-soft.png', depthTexture => {
+      const avatarAssets = window.__CKY_AVATAR_ASSETS__ || {};
+      loader.load(avatarAssets.color || 'avatar-cutout.png', colorTexture => {
+        loader.load(avatarAssets.depth || 'avatar-depth-soft.png', depthTexture => {
           try {
             colorTexture.colorSpace = THREE.SRGBColorSpace;
             depthTexture.colorSpace = THREE.NoColorSpace;
