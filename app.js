@@ -1,44 +1,44 @@
 const projects = [
-  { id:'anne', category:'editorial', kicker:'FASHION EDITORIAL / 01', title:'《穿普拉达的女王2》', subtitle:'Anne / 封面合成', image:'assets/hero/《穿普拉达的女王2》Anne封面合成.png', video:'《穿普拉达的女王2》Anne封面合成.mp4', frames:['assets/hero/《穿普拉达的女王2》Anne封面合成.png','assets/hero/《穿普拉达的女王2》Meryl封面合成.png','assets/thumbs/frame_05.png'], desc:'人物、服装、封面版式和镜头节奏的合成实验。用一秒钟建立时尚语气，让人物进入可以被传播的编辑语境。', tags:['Cover compositing','Motion packaging','Editorial eye'], role:'视觉合成 / 动态包装', format:'竖版 4K · 18.8s', year:'2025' },
-  { id:'meryl', category:'editorial', kicker:'FASHION EDITORIAL / 02', title:'《穿普拉达的女王2》', subtitle:'Meryl / 封面合成', image:'assets/hero/《穿普拉达的女王2》Meryl封面合成.png', video:'《穿普拉达的女王2》Meryl封面合成.mp4', frames:['assets/hero/《穿普拉达的女王2》Meryl封面合成.png','assets/thumbs/frame_06.png','assets/thumbs/frame_07.png'], desc:'围绕人物姿态、版式重心和色彩关系完成封面合成与动效包装，保持杂志感，同时照顾社交平台的观看速度。', tags:['Fashion','Compositing','Typography'], role:'视觉合成 / 动效执行', format:'竖版 4K · 15.6s', year:'2025' },
-  { id:'swisse', category:'brand', kicker:'BRAND MOTION / 03', title:'Vogue × Swisse', subtitle:'Plus / MG 动画演绎', image:'assets/hero/VogueXSwisseMG动画演绎.png', video:'VogueXSwisseMG动画演绎.mp4', frames:['assets/hero/VogueXSwisseMG动画演绎.png','assets/thumbs/frame_20.png','assets/thumbs/frame_21.png'], desc:'以深色背景、金色边缘光和瓶身轮廓建立克制的品牌氛围，让产品信息自然进入观看路径。', tags:['Product motion','Brand tone','Visual QA'], role:'MG 动画 / 产品视觉', format:'竖版 1080p · 22.4s', year:'2024' },
-  { id:'1664-live', category:'brand', kicker:'WORLD BUILDING / 04', title:'GQ × 1664', subtitle:'实景合成动画', image:'assets/hero/智族GQX1664实景合成动画.png', video:'智族GQX1664实景合成动画.mp4', frames:['assets/hero/智族GQX1664实景合成动画.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'], desc:'把产品置入真实空间，通过尺度关系、光线方向和场景氛围，让品牌权益成为地点感的一部分。', tags:['Live compositing','Scale','Light direction'], role:'实景合成 / 后期执行', format:'竖版 1500×2000 · 21.6s', year:'2023' },
-  { id:'1664-mg', category:'brand', kicker:'WORLD BUILDING / 05', title:'GQ × 1664', subtitle:'MG 动画', image:'assets/hero/智族GQX1664MG动画.png', video:'智族GQX1664MG动画.mp4', frames:['assets/hero/智族GQX1664MG动画.png','assets/thumbs/frame_12.png','assets/thumbs/frame_13.png'], desc:'用图形、色彩和节奏压缩信息，把商业权益转译成更接近编辑内容的动态图形语言。', tags:['MG design','Brand system','Timing'], role:'MG 动画 / 视觉设计', format:'竖版 1440×1920 · 25.3s', year:'2023' },
+  { id:'anne', category:'editorial', kicker:'FASHION EDITORIAL / 01', title:'《穿普拉达的女王2》', subtitle:'Anne / 封面合成', image:'assets/hero/《穿普拉达的女王2》Anne封面合成.png', video:'./assets/videos/《穿普拉达的女王2》Anne封面合成.mp4', frames:['assets/hero/《穿普拉达的女王2》Anne封面合成.png','assets/hero/《穿普拉达的女王2》Meryl封面合成.png','assets/thumbs/frame_05.png'], desc:'人物、服装、封面版式和镜头节奏的合成实验。用一秒钟建立时尚语气，让人物进入可以被传播的编辑语境。', tags:['Cover compositing','Motion packaging','Editorial eye'], role:'视觉合成 / 动态包装', format:'竖版 4K · 18.8s', year:'2025' },
+  { id:'meryl', category:'editorial', kicker:'FASHION EDITORIAL / 02', title:'《穿普拉达的女王2》', subtitle:'Meryl / 封面合成', image:'assets/hero/《穿普拉达的女王2》Meryl封面合成.png', video:'./assets/videos/《穿普拉达的女王2》Meryl封面合成.mp4', frames:['assets/hero/《穿普拉达的女王2》Meryl封面合成.png','assets/thumbs/frame_06.png','assets/thumbs/frame_07.png'], desc:'围绕人物姿态、版式重心和色彩关系完成封面合成与动效包装，保持杂志感，同时照顾社交平台的观看速度。', tags:['Fashion','Compositing','Typography'], role:'视觉合成 / 动效执行', format:'竖版 4K · 15.6s', year:'2025' },
+  { id:'swisse', category:'brand', kicker:'BRAND MOTION / 03', title:'Vogue × Swisse', subtitle:'Plus / MG 动画演绎', image:'assets/hero/VogueXSwisseMG动画演绎.png', video:'./assets/videos/VogueXSwisseMG动画演绎.mp4', frames:['assets/hero/VogueXSwisseMG动画演绎.png','assets/thumbs/frame_20.png','assets/thumbs/frame_21.png'], desc:'以深色背景、金色边缘光和瓶身轮廓建立克制的品牌氛围，让产品信息自然进入观看路径。', tags:['Product motion','Brand tone','Visual QA'], role:'MG 动画 / 产品视觉', format:'竖版 1080p · 22.4s', year:'2024' },
+  { id:'1664-live', category:'brand', kicker:'WORLD BUILDING / 04', title:'GQ × 1664', subtitle:'实景合成动画', image:'assets/hero/智族GQX1664实景合成动画.png', video:'./assets/videos/智族GQX1664实景合成动画.mp4', frames:['assets/hero/智族GQX1664实景合成动画.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'], desc:'把产品置入真实空间，通过尺度关系、光线方向和场景氛围，让品牌权益成为地点感的一部分。', tags:['Live compositing','Scale','Light direction'], role:'实景合成 / 后期执行', format:'竖版 1500×2000 · 21.6s', year:'2023' },
+  { id:'1664-mg', category:'brand', kicker:'WORLD BUILDING / 05', title:'GQ × 1664', subtitle:'MG 动画', image:'assets/hero/智族GQX1664MG动画.png', video:'./assets/videos/智族GQX1664MG动画.mp4', frames:['assets/hero/智族GQX1664MG动画.png','assets/thumbs/frame_12.png','assets/thumbs/frame_13.png'], desc:'用图形、色彩和节奏压缩信息，把商业权益转译成更接近编辑内容的动态图形语言。', tags:['MG design','Brand system','Timing'], role:'MG 动画 / 视觉设计', format:'竖版 1440×1920 · 25.3s', year:'2023' },
   { id:'ski', kind:'series', category:'system', kicker:'CONTENT SYSTEM / 06', title:'GQ Sports', subtitle:'沉浸式滑雪问答系列', image:'assets/hero/智族GQSportsMG动画单板双板.png', desc:'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', tags:['Series design','Vertical video','Lifestyle'], role:'系列视觉 / MG 动画', format:'8 个竖版片段', year:'2023', clips:[
-    { id:'ski-single-double', title:'单板 / 双板', video:'智族GQSportsMG动画单板双板.mp4', image:'assets/hero/智族GQSportsMG动画单板双板.png', frames:['assets/hero/智族GQSportsMG动画单板双板.png','assets/thumbs/frame_14.png','assets/thumbs/frame_18.png'], format:'1680×2240 · 32.4s' },
-    { id:'ski-advanced', title:'高级雪道', video:'智族GQSportsMG动画高级雪道.mp4', image:'assets/thumbs/frame_15.png', frames:['assets/thumbs/frame_15.png','assets/thumbs/frame_16.png','assets/thumbs/frame_17.png'], format:'1680×2240 · 46.2s' },
-    { id:'ski-buddy', title:'滑雪搭子', video:'智族GQSportsMG动画滑雪搭子.mp4', image:'assets/thumbs/frame_19.png', frames:['assets/thumbs/frame_19.png','assets/thumbs/frame_20.png','assets/thumbs/frame_21.png'], format:'1680×2240 · 33.9s' },
-    { id:'ski-end', title:'滑雪尽头', video:'智族GQSportsMG动画滑雪尽头.mp4', image:'assets/thumbs/frame_22.png', frames:['assets/thumbs/frame_22.png','assets/thumbs/frame_23.png','assets/thumbs/frame_24.png'], format:'1680×2240 · 28.6s' },
-    { id:'ski-hotel', title:'滑雪酒店', video:'智族GQSportsMG动画滑雪酒店.mp4', image:'assets/thumbs/frame_25.png', frames:['assets/thumbs/frame_25.png','assets/thumbs/frame_26.png','assets/thumbs/frame_27.png'], format:'1680×2240 · 27.4s' },
-    { id:'ski-suitable', title:'适合雪场', video:'智族GQSportsMG动画适合雪场.mp4', image:'assets/thumbs/frame_28.png', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_24.png'], format:'1680×2240 · 42.6s' },
-    { id:'ski-outfit', title:'雪场穿搭', video:'智族GQSportsMG动画雪场穿搭.mp4', image:'assets/thumbs/frame_10.png', frames:['assets/thumbs/frame_10.png','assets/thumbs/frame_11.png','assets/thumbs/frame_12.png'], format:'1680×2240 · 47.2s' },
-    { id:'ski-cable', title:'雪场缆车', video:'智族GQSportsMG动画雪场缆车.mp4', image:'assets/thumbs/frame_13.png', frames:['assets/thumbs/frame_13.png','assets/thumbs/frame_14.png','assets/thumbs/frame_15.png'], format:'1680×2240 · 49.2s' }
+    { id:'ski-single-double', title:'单板 / 双板', video:'./assets/videos/智族GQSportsMG动画单板双板.mp4', image:'assets/hero/智族GQSportsMG动画单板双板.png', frames:['assets/hero/智族GQSportsMG动画单板双板.png','assets/thumbs/frame_14.png','assets/thumbs/frame_18.png'], format:'1680×2240 · 32.4s' },
+    { id:'ski-advanced', title:'高级雪道', video:'./assets/videos/智族GQSportsMG动画高级雪道.mp4', image:'assets/thumbs/frame_15.png', frames:['assets/thumbs/frame_15.png','assets/thumbs/frame_16.png','assets/thumbs/frame_17.png'], format:'1680×2240 · 46.2s' },
+    { id:'ski-buddy', title:'滑雪搭子', video:'./assets/videos/智族GQSportsMG动画滑雪搭子.mp4', image:'assets/thumbs/frame_19.png', frames:['assets/thumbs/frame_19.png','assets/thumbs/frame_20.png','assets/thumbs/frame_21.png'], format:'1680×2240 · 33.9s' },
+    { id:'ski-end', title:'滑雪尽头', video:'./assets/videos/智族GQSportsMG动画滑雪尽头.mp4', image:'assets/thumbs/frame_22.png', frames:['assets/thumbs/frame_22.png','assets/thumbs/frame_23.png','assets/thumbs/frame_24.png'], format:'1680×2240 · 28.6s' },
+    { id:'ski-hotel', title:'滑雪酒店', video:'./assets/videos/智族GQSportsMG动画滑雪酒店.mp4', image:'assets/thumbs/frame_25.png', frames:['assets/thumbs/frame_25.png','assets/thumbs/frame_26.png','assets/thumbs/frame_27.png'], format:'1680×2240 · 27.4s' },
+    { id:'ski-suitable', title:'适合雪场', video:'./assets/videos/智族GQSportsMG动画适合雪场.mp4', image:'assets/thumbs/frame_28.png', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_24.png'], format:'1680×2240 · 42.6s' },
+    { id:'ski-outfit', title:'雪场穿搭', video:'./assets/videos/智族GQSportsMG动画雪场穿搭.mp4', image:'assets/thumbs/frame_10.png', frames:['assets/thumbs/frame_10.png','assets/thumbs/frame_11.png','assets/thumbs/frame_12.png'], format:'1680×2240 · 47.2s' },
+    { id:'ski-cable', title:'雪场缆车', video:'./assets/videos/智族GQSportsMG动画雪场缆车.mp4', image:'assets/thumbs/frame_13.png', frames:['assets/thumbs/frame_13.png','assets/thumbs/frame_14.png','assets/thumbs/frame_15.png'], format:'1680×2240 · 49.2s' }
   ] },
   { id:'douyin', kind:'series', category:'system', kicker:'PLATFORM / 07', title:'抖音跨年生活', subtitle:'花字包装 / 多地区版本', image:'assets/hero/抖音跨年生活花字包装广东篇.png', desc:'同一传播主题下适配广东、川渝、东北等地区语境，处理字体动线、信息密度和平台观看速度。', tags:['Dynamic typography','Localization','Campaign'], role:'花字设计 / 动态包装', format:'3 个地区版本', year:'2022', clips:[
-    { id:'douyin-guangdong', title:'广东篇', video:'抖音跨年生活花字包装广东篇.mp4', image:'assets/hero/抖音跨年生活花字包装广东篇.png', frames:['assets/hero/抖音跨年生活花字包装广东篇.png','assets/thumbs/frame_22.png','assets/thumbs/frame_23.png'], format:'横版 4K · 44.0s' },
-    { id:'douyin-chuan-yu', title:'川渝篇', video:'抖音跨年生活花字包装川渝篇.mp4', image:'assets/thumbs/frame_22.png', frames:['assets/thumbs/frame_22.png','assets/thumbs/frame_23.png','assets/thumbs/frame_24.png'], format:'横版 4K' },
-    { id:'douyin-dongbei', title:'东北篇', video:'抖音跨年生活花字包装东北篇.mp4', image:'assets/thumbs/frame_23.png', frames:['assets/thumbs/frame_23.png','assets/thumbs/frame_24.png','assets/thumbs/frame_25.png'], format:'横版 4K' }
+    { id:'douyin-guangdong', title:'广东篇', video:'./assets/videos/抖音跨年生活花字包装广东篇.mp4', image:'assets/hero/抖音跨年生活花字包装广东篇.png', frames:['assets/hero/抖音跨年生活花字包装广东篇.png','assets/thumbs/frame_22.png','assets/thumbs/frame_23.png'], format:'横版 4K · 44.0s' },
+    { id:'douyin-chuan-yu', title:'川渝篇', video:'./assets/videos/抖音跨年生活花字包装川渝篇.mp4', image:'assets/thumbs/frame_22.png', frames:['assets/thumbs/frame_22.png','assets/thumbs/frame_23.png','assets/thumbs/frame_24.png'], format:'横版 4K' },
+    { id:'douyin-dongbei', title:'东北篇', video:'./assets/videos/抖音跨年生活花字包装东北篇.mp4', image:'assets/thumbs/frame_23.png', frames:['assets/thumbs/frame_23.png','assets/thumbs/frame_24.png','assets/thumbs/frame_25.png'], format:'横版 4K' }
   ] },
-  { id:'volvo', category:'system', kicker:'PLATFORM / 08', title:'Volvo × GolfBox', subtitle:'MG 动画演绎', image:'assets/hero/沃尔沃XGolfBoxMG动画演绎.png', video:'沃尔沃XGolfBoxMG动画演绎.mp4', frames:['assets/hero/沃尔沃XGolfBoxMG动画演绎.png','assets/thumbs/frame_24.png','assets/thumbs/frame_25.png'], desc:'在汽车、运动和生活方式之间寻找视觉连接，用清晰的节奏完成从产品信息到生活场景的过渡。', tags:['Motion graphics','Brand story','Pacing'], role:'MG 动画 / 后期合成', format:'混合比例 · 24.5s', year:'2023' },
+  { id:'volvo', category:'system', kicker:'PLATFORM / 08', title:'Volvo × GolfBox', subtitle:'MG 动画演绎', image:'assets/hero/沃尔沃XGolfBoxMG动画演绎.png', video:'./assets/videos/沃尔沃XGolfBoxMG动画演绎.mp4', frames:['assets/hero/沃尔沃XGolfBoxMG动画演绎.png','assets/thumbs/frame_24.png','assets/thumbs/frame_25.png'], desc:'在汽车、运动和生活方式之间寻找视觉连接，用清晰的节奏完成从产品信息到生活场景的过渡。', tags:['Motion graphics','Brand story','Pacing'], role:'MG 动画 / 后期合成', format:'混合比例 · 24.5s', year:'2023' },
   { id:'gq-vw', kind:'series', category:'system', kicker:'DYNAMIC POSTER / 09', title:'GQ × 大众动态海报', subtitle:'城市站点系列', image:'assets/hero/GQX大众动态海报成都站.png', desc:'围绕不同城市站点建立统一的动态海报系统，在同一视觉骨架下调整信息、节奏与城市内容。', tags:['Dynamic poster','Series system','Localization'], role:'动态海报 / 系列视觉', format:'4 个城市版本', year:'2023', clips:[
-    { id:'gq-vw-shanghai', title:'上海站', video:'GQX大众动态海报上海站.mp4', image:'assets/hero/GQX大众动态海报成都站.png', frames:['assets/hero/GQX大众动态海报成都站.png','assets/thumbs/frame_08.png','assets/thumbs/frame_09.png'] },
-    { id:'gq-vw-shenzhen', title:'深圳站', video:'GQX大众动态海报深圳站.mp4', image:'assets/thumbs/frame_08.png', frames:['assets/thumbs/frame_08.png','assets/thumbs/frame_09.png','assets/thumbs/frame_10.png'] },
-    { id:'gq-vw-shenzhen-2', title:'深圳二站', video:'GQX大众动态海报深圳二站.mp4', image:'assets/thumbs/frame_09.png', frames:['assets/thumbs/frame_09.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'] },
-    { id:'gq-vw-chengdu', title:'成都站', video:'GQX大众动态海报成都站.mp4', image:'assets/hero/GQX大众动态海报成都站.png', frames:['assets/hero/GQX大众动态海报成都站.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'] }
+    { id:'gq-vw-shanghai', title:'上海站', video:'./assets/videos/GQX大众动态海报上海站.mp4', image:'assets/hero/GQX大众动态海报成都站.png', frames:['assets/hero/GQX大众动态海报成都站.png','assets/thumbs/frame_08.png','assets/thumbs/frame_09.png'] },
+    { id:'gq-vw-shenzhen', title:'深圳站', video:'./assets/videos/GQX大众动态海报深圳站.mp4', image:'assets/thumbs/frame_08.png', frames:['assets/thumbs/frame_08.png','assets/thumbs/frame_09.png','assets/thumbs/frame_10.png'] },
+    { id:'gq-vw-shenzhen-2', title:'深圳二站', video:'./assets/videos/GQX大众动态海报深圳二站.mp4', image:'assets/thumbs/frame_09.png', frames:['assets/thumbs/frame_09.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'] },
+    { id:'gq-vw-chengdu', title:'成都站', video:'./assets/videos/GQX大众动态海报成都站.mp4', image:'assets/hero/GQX大众动态海报成都站.png', frames:['assets/hero/GQX大众动态海报成都站.png','assets/thumbs/frame_10.png','assets/thumbs/frame_11.png'] }
   ] },
-  { id:'calerie', category:'composite', kicker:'AI + 3D / 10', title:'科兰黎 VB 修复精华', subtitle:'AI 三维合成', image:'assets/hero/科兰黎VB修复精华ai三维合成.png', video:'科兰黎VB修复精华ai三维合成.mp4', frames:['assets/hero/科兰黎VB修复精华ai三维合成.png','assets/thumbs/frame_26.png','assets/thumbs/frame_27.png'], desc:'把产品放进一个可信但不平庸的场景，关注边缘、材质、光线方向和品牌信息的可读性。', tags:['AI compositing','3D product','Material'], role:'AI 视觉 / 三维合成', format:'竖版 1080×1920 · 16.8s', year:'2024' },
-  { id:'onepiece', category:'composite', kicker:'AI + 3D / 11', title:'溪木源 × One Piece', subtitle:'AI 三维合成', image:'assets/thumbs/frame_28.png', video:'溪木源XOnePiece ai三维合成.mp4', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_27.png'], desc:'以联名 IP 与产品为核心完成 AI 场景、材质和动态关系的合成表达。', tags:['AI compositing','IP campaign','Product'], role:'AI 视觉 / 三维合成', format:'竖版', year:'2024' },
+  { id:'calerie', category:'composite', kicker:'AI + 3D / 10', title:'科兰黎 VB 修复精华', subtitle:'AI 三维合成', image:'assets/hero/科兰黎VB修复精华ai三维合成.png', video:'./assets/videos/科兰黎VB修复精华ai三维合成.mp4', frames:['assets/hero/科兰黎VB修复精华ai三维合成.png','assets/thumbs/frame_26.png','assets/thumbs/frame_27.png'], desc:'把产品放进一个可信但不平庸的场景，关注边缘、材质、光线方向和品牌信息的可读性。', tags:['AI compositing','3D product','Material'], role:'AI 视觉 / 三维合成', format:'竖版 1080×1920 · 16.8s', year:'2024' },
+  { id:'onepiece', category:'composite', kicker:'AI + 3D / 11', title:'溪木源 × One Piece', subtitle:'AI 三维合成', image:'assets/thumbs/frame_28.png', video:'./assets/videos/溪木源XOnePiece ai三维合成.mp4', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_27.png'], desc:'以联名 IP 与产品为核心完成 AI 场景、材质和动态关系的合成表达。', tags:['AI compositing','IP campaign','Product'], role:'AI 视觉 / 三维合成', format:'竖版', year:'2024' },
   { id:'xiaoyuan', kind:'series', category:'composite', kicker:'CHARACTER COMPOSITE / 12', title:'小猿 IP 形象', subtitle:'角色合成镜头', image:'assets/thumbs/frame_26.png', desc:'围绕 IP 形象完成两组场景合成镜头，统一角色尺度、光线和空间关系。', tags:['Character composite','IP visual','Compositing'], role:'IP 形象 / 场景合成', format:'2 个合成镜头', year:'2024', clips:[
-    { id:'xiaoyuan-1', title:'合成镜头 1', video:'小猿IP形象合成镜头1.mp4', image:'assets/thumbs/frame_26.png', frames:['assets/thumbs/frame_26.png','assets/thumbs/frame_27.png','assets/thumbs/frame_28.png'] },
-    { id:'xiaoyuan-2', title:'合成镜头 2', video:'小猿IP形象合成镜头2.mp4', image:'assets/thumbs/frame_27.png', frames:['assets/thumbs/frame_27.png','assets/thumbs/frame_28.png','assets/thumbs/frame_29.png'] }
+    { id:'xiaoyuan-1', title:'合成镜头 1', video:'./assets/videos/小猿IP形象合成镜头1.mp4', image:'assets/thumbs/frame_26.png', frames:['assets/thumbs/frame_26.png','assets/thumbs/frame_27.png','assets/thumbs/frame_28.png'] },
+    { id:'xiaoyuan-2', title:'合成镜头 2', video:'./assets/videos/小猿IP形象合成镜头2.mp4', image:'assets/thumbs/frame_27.png', frames:['assets/thumbs/frame_27.png','assets/thumbs/frame_28.png','assets/thumbs/frame_29.png'] }
   ] },
   { id:'micro', kind:'series', category:'composite', kicker:'AI + 3D / 13', title:'Microingredients', subtitle:'多站点三维动画', image:'assets/hero/Microingredients三维动画埃及站.png', desc:'同一产品叙事适配埃及、巴西、云南等不同站点，建立统一的三维视觉资产与输出规则。', tags:['3D animation','Localization','Asset system'], role:'三维动画 / 多版本输出', format:'3 个站点版本', year:'2024', clips:[
-    { id:'micro', title:'埃及站 / 三维动画', video:'Microingredients三维动画埃及站.mp4', image:'assets/hero/Microingredients三维动画埃及站.png', frames:['assets/hero/Microingredients三维动画埃及站.png','assets/thumbs/frame_28.png','assets/thumbs/frame_29.png'] },
-    { id:'micro-brazil', title:'巴西站 / 三维动画', video:'Microingredients三维动画巴西站.mp4', image:'assets/thumbs/frame_28.png', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_27.png'] },
-    { id:'micro-yunnan', title:'云南站 / 三维动画', video:'Microingredients三维动画云南站.mp4', image:'assets/thumbs/frame_29.png', frames:['assets/thumbs/frame_29.png','assets/thumbs/frame_28.png','assets/thumbs/frame_27.png'] }
+    { id:'micro', title:'埃及站 / 三维动画', video:'./assets/videos/Microingredients三维动画埃及站.mp4', image:'assets/hero/Microingredients三维动画埃及站.png', frames:['assets/hero/Microingredients三维动画埃及站.png','assets/thumbs/frame_28.png','assets/thumbs/frame_29.png'] },
+    { id:'micro-brazil', title:'巴西站 / 三维动画', video:'./assets/videos/Microingredients三维动画巴西站.mp4', image:'assets/thumbs/frame_28.png', frames:['assets/thumbs/frame_28.png','assets/thumbs/frame_29.png','assets/thumbs/frame_27.png'] },
+    { id:'micro-yunnan', title:'云南站 / 三维动画', video:'./assets/videos/Microingredients三维动画云南站.mp4', image:'assets/thumbs/frame_29.png', frames:['assets/thumbs/frame_29.png','assets/thumbs/frame_28.png','assets/thumbs/frame_27.png'] }
   ] },
-  { id:'uniqlo', category:'editorial', kicker:'EDITORIAL MOTION / 11', title:'优衣库 × 上海博物馆', subtitle:'动态海报', image:'assets/hero/优衣库X上海博物馆动态海报.png', video:'优衣库X上海博物馆动态海报.mp4', frames:['assets/hero/优衣库X上海博物馆动态海报.png','assets/thumbs/frame_02.png','assets/thumbs/frame_03.png'], desc:'在文化语境、服装信息和动态海报的观看动线之间建立秩序，让静态版式获得时间维度。', tags:['Dynamic poster','Cultural content','Layout'], role:'动态海报 / 视觉包装', format:'竖版 2480×3508 · 21.2s', year:'2023' },
-  { id:'end', category:'editorial', kicker:'PERSONAL FILM / 12', title:'《末端派送》', subtitle:'毕业设计', image:'assets/thumbs/frame_00.png', video:'《末端派送》毕业设计.mp4', frames:['assets/thumbs/frame_00.png','assets/thumbs/frame_01.png','assets/thumbs/frame_04.png'], desc:'个人影像项目。以横向电影画幅探索人物、空间与移动的关系，作为商业视觉之外的叙事练习。', tags:['Personal film','Direction','Editing'], role:'导演 / 剪辑 / 视觉设计', format:'横版 2560×1080 · 6′40″', year:'2023' }
+  { id:'uniqlo', category:'editorial', kicker:'EDITORIAL MOTION / 11', title:'优衣库 × 上海博物馆', subtitle:'动态海报', image:'assets/hero/优衣库X上海博物馆动态海报.png', video:'./assets/videos/优衣库X上海博物馆动态海报.mp4', frames:['assets/hero/优衣库X上海博物馆动态海报.png','assets/thumbs/frame_02.png','assets/thumbs/frame_03.png'], desc:'在文化语境、服装信息和动态海报的观看动线之间建立秩序，让静态版式获得时间维度。', tags:['Dynamic poster','Cultural content','Layout'], role:'动态海报 / 视觉包装', format:'竖版 2480×3508 · 21.2s', year:'2023' },
+  { id:'end', category:'editorial', kicker:'PERSONAL FILM / 12', title:'《末端派送》', subtitle:'毕业设计', image:'assets/thumbs/frame_00.png', video:'', frames:['assets/thumbs/frame_00.png','assets/thumbs/frame_01.png','assets/thumbs/frame_04.png'], desc:'个人影像项目。以横向电影画幅探索人物、空间与移动的关系，作为商业视觉之外的叙事练习。', tags:['Personal film','Direction','Editing'], role:'导演 / 剪辑 / 视觉设计', format:'横版 2560×1080 · 6′40″', year:'2023' }
 ];
 
 const FRAME_STORAGE_KEY = 'cky-portfolio-frame-selections-v1';
@@ -48,7 +48,8 @@ const GROUP_STORAGE_KEY = 'cky-portfolio-group-config-v1';
 const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
-const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'陈坤勇_VOGUE定向简历.pdf' };
+const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'resume/陈坤勇_VOGUE定向简历.pdf' };
+const EMBEDDED_CONFIG = window.__CKY_PORTFOLIO_CONFIG__ || {};
 const CATEGORY_LABELS = { editorial:'时尚 / 编辑', brand:'品牌 / 3D', system:'内容系统', composite:'AI / 合成' };
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
 const DEFAULT_GROUP_BY_ID = {
@@ -72,6 +73,11 @@ const coverPlay = document.querySelector('#cover-play');
 const seriesSwitcher = document.querySelector('#series-switcher');
 const syncChannel = 'BroadcastChannel' in window ? new BroadcastChannel('cky-portfolio-sync') : null;
 const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const resolveLocalVideo = (value) => {
+  if (!value) return '';
+  if (/^(?:https?:|blob:|data:|\/|\.\/assets\/videos\/|assets\/videos\/)/i.test(value)) return value;
+  return './assets/videos/' + value;
+};
 let activeProject = null;
 let activeClip = null;
 let renderedProjects = [];
@@ -79,7 +85,7 @@ let activeExternalVideo = null;
 let pendingVideoSrc = '';
 
 function readFrameSelections() {
-  const baseline = window.__PORTFOLIO_FRAME_SELECTIONS__ || {};
+  const baseline = {...(window.__PORTFOLIO_FRAME_SELECTIONS__ || {}), ...(EMBEDDED_CONFIG.frames || {})};
   const baselineVersion = window.__PORTFOLIO_FRAME_SELECTIONS_VERSION__ || '';
   try {
     const stored = JSON.parse(localStorage.getItem(FRAME_STORAGE_KEY) || '{}');
@@ -93,22 +99,37 @@ function readFrameSelections() {
   } catch { return baseline; }
 }
 function readContentConfig() {
-  try { return JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY) || '{}'); } catch { return {}; }
+  try {
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    return raw !== null ? (JSON.parse(raw) || {}) : (EMBEDDED_CONFIG.content || {});
+  } catch { return EMBEDDED_CONFIG.content || {}; }
 }
 function readGroupConfig() {
-  try { return JSON.parse(localStorage.getItem(GROUP_STORAGE_KEY) || '{"order":[],"colors":{}}'); } catch { return {order:[], colors:{}}; }
+  try {
+    const raw = localStorage.getItem(GROUP_STORAGE_KEY);
+    return raw !== null ? (JSON.parse(raw) || {order:[], colors:{}}) : (EMBEDDED_CONFIG.groups || {order:[], colors:{}});
+  } catch { return EMBEDDED_CONFIG.groups || {order:[], colors:{}}; }
 }
 function readCustomProjects() {
-  try { const value = JSON.parse(localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; }
+  try {
+    const raw = localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY);
+    const value = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.customProjects || []);
+    return Array.isArray(value) ? value : [];
+  } catch { return Array.isArray(EMBEDDED_CONFIG.customProjects) ? EMBEDDED_CONFIG.customProjects : []; }
 }
 function readHiddenProjectIds() {
-  try { const value = JSON.parse(localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY) || '[]'); return new Set(Array.isArray(value) ? value : []); } catch { return new Set(); }
+  try {
+    const raw = localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY);
+    const value = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.hiddenIds || []);
+    return new Set(Array.isArray(value) ? value : []);
+  } catch { return new Set(Array.isArray(EMBEDDED_CONFIG.hiddenIds) ? EMBEDDED_CONFIG.hiddenIds : []); }
 }
 function readResumeConfig() {
   try {
-    const value = JSON.parse(localStorage.getItem(RESUME_STORAGE_KEY) || 'null');
+    const raw = localStorage.getItem(RESUME_STORAGE_KEY);
+    const value = raw !== null ? JSON.parse(raw) : EMBEDDED_CONFIG.resume;
     return value?.href ? value : DEFAULT_RESUME;
-  } catch { return DEFAULT_RESUME; }
+  } catch { return EMBEDDED_CONFIG.resume?.href ? EMBEDDED_CONFIG.resume : DEFAULT_RESUME; }
 }
 function applyResumeConfig() {
   const resume = readResumeConfig();
@@ -439,7 +460,7 @@ function loadClip(project, clip) {
   activeExternalVideo = resolveExternalVideo(clipMeta.externalVideo || clip.externalVideo);
   pendingVideoSrc = activeExternalVideo?.type === 'video'
     ? activeExternalVideo.src
-    : (!activeExternalVideo && clip.video ? clip.video : '');
+    : (!activeExternalVideo && clip.video ? resolveLocalVideo(clip.video) : '');
   video.preload = 'none';
   if (activeExternalVideo?.type === 'embed') {
     placeholder.textContent = '点击播放 Bilibili 视频';
