@@ -903,3 +903,34 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
 
 /* FILTERED GROUP TOP SPACING */
 .group-divider.is-filter-first { margin-top:0; }
+
+/* MOBILE WORK HEADING */
+@media (max-width:720px) {
+  .work-section .section-head h2 {
+    white-space:nowrap; font-size:clamp(28px,8.8vw,38px);
+    letter-spacing:-.055em;
+  }
+}
+
+/* MOBILE WORK HEADING V2 */
+@media (max-width:720px) {
+  .work-section .section-head h2 {
+    display:block; width:max-content; max-width:none;
+    white-space:nowrap; font-size:clamp(28px,8.8vw,38px);
+    line-height:1; letter-spacing:-.055em;
+  }
+  .work-section .filters {
+    width:max-content; min-width:100%; max-width:none;
+    flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+  }
+}
+
+/* MOBILE PORTRAIT CENTER */
+@media (max-width:720px) {
+  .profile-portrait {
+    align-self:center; justify-self:center; margin-inline:auto;
+    width:min(82vw,360px); transform:none;
+  }
+  .profile-portrait figcaption { width:100%; gap:8px; }
+  .profile-portrait figcaption span:last-child { text-align:right; }
+}
