@@ -934,3 +934,13 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
   .profile-portrait figcaption { width:100%; gap:8px; }
   .profile-portrait figcaption span:last-child { text-align:right; }
 }
+
+/* MOBILE COPY WRAPPING */
+@media (max-width:720px) {
+  .hero-lede {
+    max-width:100%; font-size:14px; line-height:1.8;
+    letter-spacing:-.015em; text-wrap:pretty;
+  }
+  .hero-lede br,.approach-break { display:none; }
+  .profile-approach p { max-width:100%; text-wrap:pretty; }
+}
