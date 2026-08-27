@@ -884,3 +884,19 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
     width:100%; min-width:0; text-align:center; white-space:nowrap;
   }
 }
+
+/* MOBILE SINGLE ROW TAGS */
+@media (max-width:720px) {
+  .profile-credentials .profile-skills,.profile-tools {
+    display:flex; flex-wrap:nowrap; align-items:stretch; gap:6px;
+    width:100%; overflow-x:auto; overflow-y:hidden; padding:2px 0 8px;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch;
+    overscroll-behavior-inline:contain; scroll-snap-type:x proximity;
+  }
+  .profile-credentials .profile-skills::-webkit-scrollbar,.profile-tools::-webkit-scrollbar { display:none; }
+  .profile-credentials .profile-skills span,.profile-tools span {
+    flex:0 0 auto; width:auto; min-width:0; white-space:nowrap;
+    text-align:center; padding:7px 8px; scroll-snap-align:start;
+  }
+  .profile-tools span { font-size:12px; }
+}
