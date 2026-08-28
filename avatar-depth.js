@@ -1,6 +1,6 @@
 (() => {
   const STORAGE_KEY = 'cky-portfolio-avatar-config-v1';
-  const DEFAULTS = Object.freeze({ tilt:9, displacementScale:.27, background:'transparent' });
+  const DEFAULTS = Object.freeze({ tilt:12, displacementScale:.45, background:'transparent' });
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   function readConfig() {

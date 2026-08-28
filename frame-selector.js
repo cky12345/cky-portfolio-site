@@ -7,7 +7,7 @@ const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
 const AVATAR_STORAGE_KEY = 'cky-portfolio-avatar-config-v1';
 const DEFAULT_RESUME_CONFIG = { name:'陈坤勇_VOGUE定向简历.pdf', href:'陈坤勇_VOGUE定向简历.pdf' };
-const DEFAULT_AVATAR_CONFIG = { tilt:9, displacementScale:.27, background:'transparent' };
+const DEFAULT_AVATAR_CONFIG = { tilt:12, displacementScale:.45, background:'transparent' };
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
 const DEFAULT_KICKER_BY_ID = {
   anne:'FASHION EDITORIAL / 01', meryl:'FASHION EDITORIAL / 02', uniqlo:'EDITORIAL MOTION / 11', end:'PERSONAL FILM / 12',
