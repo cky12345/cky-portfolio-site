@@ -1,6 +1,6 @@
 {
   "version": 5,
-  "exportedAt": "2026-08-27T17:49:54.211Z",
+  "exportedAt": "2026-08-28T00:50:10.755Z",
   "frames": {
     "anne": {
       "frames": [
@@ -686,8 +686,8 @@
     "href": "陈坤勇_VOGUE定向简历.pdf"
   },
   "avatar": {
-    "tilt": 9,
-    "displacementScale": 0.27,
+    "tilt": 12,
+    "displacementScale": 0.45,
     "background": "transparent"
   }
 }
