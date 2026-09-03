@@ -113,21 +113,22 @@
   <script src="fluid-glass.js?v=2"></script>
   <script src="variable-proximity.js?v=4"></script>
   <script>
-    // The 3D portrait is a desktop enhancement. Keep mobile startup light
-    // and show the compressed fallback portrait instead.
-    if (window.matchMedia('(min-width: 821px)').matches) {
-      const loadScript = src => new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-      loadScript('vendor/three.min.js?v=160')
-        .then(() => loadScript('avatar-assets.js?v=3'))
-        .then(() => loadScript('avatar-depth.js?v=9'))
-        .catch(() => {});
-    }
+    // Keep the interactive 3D portrait on every device, but defer its large
+    // textures until the first render/idle window so mobile can show the page
+    // immediately instead of blocking on the enhancement.
+    const loadScript = src => new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+    const loadPortrait3D = () => loadScript('vendor/three.min.js?v=160')
+      .then(() => loadScript('avatar-assets.js?v=3'))
+      .then(() => loadScript('avatar-depth.js?v=9'))
+      .catch(() => {});
+    if ('requestIdleCallback' in window) requestIdleCallback(loadPortrait3D, {timeout:2200});
+    else window.setTimeout(loadPortrait3D, 1200);
   </script>
   <script src="resume-download.js?v=1"></script>
   <script src="app.js?v=26"></script>
