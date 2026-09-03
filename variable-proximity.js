@@ -110,15 +110,18 @@
     }
   }
 
-  document.querySelectorAll('[data-variable-proximity]').forEach(element => {
-    const isYear = element.matches('em');
-    new VariableProximity(element, {
-      radius: isYear ? 135 : 185,
-      falloff: 'gaussian',
-      fromWeight: isYear ? 500 : 600,
-      toWeight: isYear ? 760 : 900,
-      fromOpticalSize: isYear ? 24 : 18,
-      toOpticalSize: 100
+  window.CKYInitVariableProximity = function (root = document) {
+    root.querySelectorAll('[data-variable-proximity]').forEach(element => {
+      const isYear = element.matches('em');
+      new VariableProximity(element, {
+        radius: isYear ? 135 : 185,
+        falloff: 'gaussian',
+        fromWeight: isYear ? 500 : 600,
+        toWeight: isYear ? 760 : 900,
+        fromOpticalSize: isYear ? 24 : 18,
+        toOpticalSize: 100
+      });
     });
-  });
+  };
+  window.CKYInitVariableProximity();
 })();

@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "exportedAt": "2026-08-28T00:50:10.755Z",
+  "version": 7,
+  "exportedAt": "2026-09-03T01:00:19.929Z",
   "frames": {
     "anne": {
       "frames": [
@@ -532,7 +532,7 @@
       "group": "三维实景合成",
       "project": "Vogue × Swisse",
       "title": "Vogue × Swisse",
-      "description": "",
+      "description": "合成产品到实拍环境里",
       "order": 5,
       "kicker": "VFX COMPOSITING"
     },
@@ -625,6 +625,15 @@
       "description": "",
       "externalVideo": "https://www.bilibili.com/video/BV1Jx421m7Bp/",
       "order": 32
+    },
+    "custom-mtko1ifz": {
+      "group": "AI内容生成",
+      "project": "《最后一件》原创概念时装短片",
+      "title": "《最后一件》",
+      "kicker": "THE LAST ITEM",
+      "description": "",
+      "externalVideo": "",
+      "order": 32
     }
   },
   "groups": {
@@ -633,10 +642,12 @@
       "AI辅助合成",
       "动态影像设计",
       "三维动画",
-      "花字特效包装"
+      "花字特效包装",
+      "AI内容生成"
     ],
     "colors": {
-      "三维动画": "#a64c78"
+      "三维动画": "#a64c78",
+      "AI内容生成": "#765b9c"
     }
   },
   "customProjects": [
@@ -670,6 +681,25 @@
       "externalVideo": "https://www.bilibili.com/video/BV1Jx421m7Bp/",
       "frames": [
         "风格参考.png"
+      ],
+      "desc": "",
+      "tags": [],
+      "role": "视觉设计",
+      "format": "视频",
+      "year": "2026"
+    },
+    {
+      "id": "custom-mtko1ifz",
+      "group": "AI内容生成",
+      "category": "custom",
+      "kicker": "THE LAST ITEM",
+      "title": "《最后一件》原创概念时装短片",
+      "subtitle": "《最后一件》THE LAST ITEM",
+      "image": "assets\\hero\\VogueXSwisseMG动画演绎.png",
+      "video": "AI生成时尚奢侈品包包广告.mp4",
+      "externalVideo": "",
+      "frames": [
+        "assets\\hero\\VogueXSwisseMG动画演绎.png"
       ],
       "desc": "",
       "tags": [],

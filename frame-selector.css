@@ -56,6 +56,7 @@ body { min-height:100vh; }
 .remove-frame { position:absolute; right:7px; top:5px; width:23px; height:23px; border:1px solid rgba(255,255,255,.8); border-radius:50%; background:rgba(0,0,0,.45); color:#fff; cursor:pointer; font-size:15px; line-height:18px; }
 .remove-frame:hover { background:var(--red); }
 .content-editor { margin-top:20px; }
+.media-path-admin { margin-top:24px; padding:18px; border:1px solid #383b46; border-radius:14px; background:linear-gradient(145deg,rgba(109,88,255,.065),rgba(10,12,17,.86) 52%); }
 .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:17px; }
 .field-grid label,.field-full { display:flex; flex-direction:column; gap:7px; color:var(--muted); font:10px "DM Mono",monospace; }
 .field-grid input,.field-grid select,.field-full input,.field-full textarea { width:100%; border:1px solid var(--line); background:rgba(255,255,255,.28); padding:10px 11px; color:var(--ink); font:12px Inter,"Microsoft YaHei",sans-serif; outline:none; }

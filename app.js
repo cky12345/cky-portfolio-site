@@ -48,6 +48,7 @@ const GROUP_STORAGE_KEY = 'cky-portfolio-group-config-v1';
 const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
+const LANGUAGE_STORAGE_KEY = 'cky-portfolio-language-v1';
 const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'./resume/陈坤勇_VOGUE定向简历.pdf' };
 const normalizeResumeHref = value => {
   const href = String(value || '').trim();
@@ -57,7 +58,153 @@ const normalizeResumeHref = value => {
   return /^resume\//i.test(clean) ? './' + clean : './resume/' + clean;
 };
 const EMBEDDED_CONFIG = window.__CKY_PORTFOLIO_CONFIG__ || {};
+// Local development helper: expose the active browser's editable configuration
+// for one-off migration from browser storage into the bundled config file.
+if (new URLSearchParams(location.search).has('dump-config')) {
+  setTimeout(() => {
+    try {
+      const payload = {
+        content: JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY) || '{}'),
+        groups: JSON.parse(localStorage.getItem(GROUP_STORAGE_KEY) || '{}'),
+        customProjects: JSON.parse(localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY) || '[]'),
+        hiddenIds: JSON.parse(localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY) || '[]')
+      };
+      console.log('CKY_CONFIG_DUMP', JSON.stringify(payload));
+      document.documentElement.setAttribute('data-cky-config-dump', btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
+      fetch('http://127.0.0.1:8010/__migrate-config', {method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:JSON.stringify(payload)})
+        .then(response => response.text()).then(result => console.log('CKY_CONFIG_MIGRATED', result))
+        .catch(error => console.warn('CKY_CONFIG_MIGRATE_FAILED', String(error)));
+    } catch (error) { console.warn('CKY_CONFIG_DUMP_FAILED', String(error)); }
+  }, 250);
+}
+let currentLanguage = 'zh';
+let groupDisplaySources = new Map();
+try { currentLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'en' ? 'en' : 'zh'; } catch (_) {}
+const UI_COPY = {
+  zh: {
+    displayName:'陈坤勇',
+    portraitRole:'视觉编辑 · 动效 · 三维',
+    navProfile:'Profile', navWork:'Selected work', navContact:'Contact',
+    sidebarCopy:'把品牌、人物与产品，剪辑成有观点的视觉叙事。',
+    heroTitle:'视觉作品集', heroLede:'视觉编辑、动态影像与三维合成。<br>为时尚内容与品牌项目建立准确、有节奏的视觉表达。', browse:'浏览精选项目',
+    profileTitle:'技术是工具，<br><em>判断决定画面。</em>', profileIntro:'数字媒体艺术背景，具备从既定视觉方向延展、分镜与拍摄协作，到三维动画、实景合成、动态包装与后期交付的完整经验。长期参与 GQ 商业视觉项目，熟悉时尚内容、品牌权益与平台传播语境；我关心的不只是画面是否完成，更在意它是否准确、有节奏，并且始终保持视觉一致。',
+    education:'中国传媒大学', degree:'数字媒体艺术 · 本科', skills:['动态影像','三维动画','实景合成','AI 内容生成'], approach:'从 brief 拆解、参考整理、<br class="mobile-approach-break" />分镜协作到执行、审核与多平台输出，<br class="approach-break" />我让品牌目标、观看节奏和画面质感形成统一表达。', viewWork:'查看精选作品 ↓', fullResume:'完整简历 ↗', downloadResume:'下载简历 ↓',
+    workTitle:'看项目，也看思路。', workNote:'点击项目，查看关键帧与完整视频。', all:'全部', groupCapability:'能力 / 分组', project:'项目', projects:'项目', frames:'关键帧', selectedFrames:'已选帧', clips:'片段',
+    contactTitle:'让下一支片子<br><em>更有记忆点。</em>', contactCard:'CONTACT / 名片', email:'邮箱', phone:'电话', wechat:'微信', copyCard:'复制名片', copied:'已复制全部信息', copyFailed:'复制失败，请重试',
+    modalClose:'关闭项目详情', frameHint:'点击关键帧切换左侧主视觉', series:'系列', work:'作品', frameExplore:'移动浏览 ↔',
+    videoLoading:'视频载入中…', playVideo:'播放项目视频', externalEmbed:'点击播放 Bilibili 视频', externalPage:'点击前往外部视频页面', videoPlay:'点击播放视频', noVideo:'暂未设置可播放的视频',
+    languageLabel:'切换到 English'
+  },
+  en: {
+    displayName:'Chen Kunyong',
+    portraitRole:'Visual editor · Motion · 3D',
+    navProfile:'Profile', navWork:'Selected work', navContact:'Contact',
+    sidebarCopy:'Editing brands, people and products into visual narratives with a point of view.',
+    heroTitle:'Visual Portfolio', heroLede:'Visual editing, motion imagery and 3D compositing.<br>Precise, rhythmic visual language for fashion content and brand projects.', browse:'Browse selected work',
+    profileTitle:'Technique is a tool,<br><em>judgement shapes the frame.</em>', profileIntro:'With a background in digital media art, I work across visual development, storyboards, shoot collaboration, 3D animation, live-action compositing, motion packaging and final delivery. I have contributed to GQ commercial visual projects and understand the language of fashion content, brand rights and platform distribution. The goal is not only to finish a frame, but to make it precise, rhythmic and visually consistent.',
+    education:'Communication University of China', degree:'Digital Media Arts · B.A.', skills:['Motion imagery','3D animation','Live compositing','AI content'], approach:'From brief breakdown and reference curation<br class="mobile-approach-break" />to storyboard collaboration, execution, review and multi-platform delivery,<br class="approach-break" />I align brand intent, viewing rhythm and image texture.', viewWork:'View selected work ↓', fullResume:'Full résumé ↗', downloadResume:'Download résumé ↓',
+    workTitle:'Look at the work, then the thinking.', workNote:'Open a project to view key frames and the full video.', all:'All', groupCapability:'CAPABILITY / GROUP', project:'PROJECT', projects:'PROJECTS', frames:'FRAMES', selectedFrames:'SELECTED FRAMES', clips:'CLIPS',
+    contactTitle:'Make the next piece<br><em>more memorable.</em>', contactCard:'CONTACT / CARD', email:'Email', phone:'Phone', wechat:'WeChat', copyCard:'Copy contact', copied:'Contact copied', copyFailed:'Copy failed, try again',
+    modalClose:'Close project details', frameHint:'Select a key frame to change the main visual', series:'SERIES', work:'WORK', frameExplore:'MOVE TO EXPLORE ↔',
+    videoLoading:'Loading video…', playVideo:'Play project video', externalEmbed:'Click to play Bilibili video', externalPage:'Open external video page', videoPlay:'Click to play video', noVideo:'No playable video set',
+    languageLabel:'切换到中文'
+  }
+};
+const t = key => UI_COPY[currentLanguage]?.[key] ?? UI_COPY.zh[key] ?? key;
+const localized = (custom, key, fallback) => {
+  if (currentLanguage === 'en') {
+    const value = custom?.en?.[key] ?? custom?.[`${key}En`];
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+  return fallback;
+};
 const CATEGORY_LABELS = { editorial:'时尚 / 编辑', brand:'品牌 / 3D', system:'内容系统', composite:'AI / 合成' };
+// Built-in English fallbacks keep the public portfolio bilingual even when an
+// older browser config has no `content[id].en` overrides yet. Explicit edits
+// made in the editor still take precedence over these values.
+const ENGLISH_GROUP_LABELS = {
+  '三维实景合成':'Live-action compositing',
+  'AI辅助合成':'AI-assisted compositing',
+  '动态影像设计':'Motion design',
+  '三维动画':'3D animation',
+  '花字特效包装':'Kinetic typography',
+  '时尚 / 编辑':'Fashion / Editorial',
+  '品牌 / 3D':'Brand / 3D',
+  'AI / 合成':'AI / Compositing',
+  '内容系统 / GQ Sports':'Content system / GQ Sports',
+  '内容系统 / 抖音跨年':'Content system / Douyin New Year',
+  '内容系统 / 抖音跨年生活':'Content system / Douyin New Year',
+  '内容系统 / GQ × 大众':'Content system / GQ × Volkswagen',
+  'AI-GenerateContext':'AI-generated context', 'AI内容生成':'AI-generated context'
+};
+const ENGLISH_VALUE_LABELS = {
+  '《穿普拉达的女王2》':'The Devil Wears Prada 2',
+  '优衣库 × 上海博物馆':'UNIQLO × Shanghai Museum',
+  '个人影像':'Personal film',
+  '毕业设计':'Graduation film',
+  '科兰黎VB修复精华':'Kelanli VB Repair Serum',
+  '科兰黎 VB 修复精华':'Kelanli VB Repair Serum',
+  '小猿 IP 形象':'Xiaoyuan IP character',
+  '抖音跨年生活':'Douyin New Year Life',
+  '抖音生活跨年季':'Douyin New Year Life',
+  'GQ × 大众动态海报':'GQ × Volkswagen Dynamic Posters',
+  '城市站点系列':'City poster series',
+  '沉浸式滑雪问答系列':'Immersive ski Q&A series',
+  '多站点三维动画':'Multi-location 3D animation',
+  '花字包装 / 多地区版本':'Kinetic type / Regional versions',
+  '广东篇':'Guangdong edition', '川渝篇':'Sichuan–Chongqing edition', '东北篇':'Northeast edition',
+  '上海站':'Shanghai', '深圳站':'Shenzhen', '深圳二站':'Shenzhen II', '成都站':'Chengdu',
+  '单板双板':'Snowboard / ski', '单板 / 双板':'Snowboard / ski', '高级雪道':'Advanced slopes',
+  '滑雪搭子':'Ski buddies', '滑雪尽头':'The end of the ski run', '滑雪酒店':'Ski hotel',
+  '适合雪场':'Made for the slopes', '雪场穿搭':'Slope styling', '雪场缆车':'Ski lift',
+  '动态海报':'Motion poster', '实景合成动画':'Live-action composite', 'MG 动画':'MG animation',
+  'MG 动画演绎':'MG animation', 'AI 三维合成':'AI 3D composite', '合成镜头 1':'Composite shot 1',
+  '合成镜头 2':'Composite shot 2', '埃及站 / 三维动画':'Egypt / 3D animation',
+  '巴西站 / 三维动画':'Brazil / 3D animation', '云南站 / 三维动画':'Yunnan / 3D animation',
+  'AI 三维合成':'AI 3D composite', '角色合成镜头':'Character composite shots',
+  'GQ × 回力新品发布会':'GQ × Warrior New Product Launch', '测试':'Test project',
+  '《最后一件》':'The Last Item', '《最后一件》原创概念时装短片':'The Last Item — Original Fashion Short'
+};
+const ENGLISH_CONTENT_BY_ID = {
+  anne:{group:'Fashion / Editorial', project:'The Devil Wears Prada 2', title:'Anne / Cover Composite', description:'A fashion cover composite built around character, wardrobe, layout and shot rhythm.'},
+  meryl:{group:'Fashion / Editorial', project:'The Devil Wears Prada 2', title:'Meryl / Cover Composite', description:'Cover compositing and motion packaging that keeps the magazine tone while moving at social speed.'},
+  uniqlo:{group:'Fashion / Editorial', project:'UNIQLO × Shanghai Museum', title:'Motion Poster', description:'A cultural editorial motion poster that gives a static layout a sense of time.'},
+  end:{group:'Fashion / Editorial', project:'Personal film', title:'The Last Mile — Graduation Film', description:'A personal film study of people, space and movement beyond commercial visual work.'},
+  swisse:{group:'Brand / 3D', project:'Vogue × Swisse', title:'Plus / MG Animation', description:'Product motion built from dark fields, gold rim light and a restrained brand atmosphere.'},
+  '1664-live':{group:'Brand / 3D', project:'GQ × 1664', title:'Live-action Composite', description:'A product composite that uses scale, light direction and location to carry the brand story.'},
+  '1664-mg':{group:'Brand / 3D', project:'GQ × 1664', title:'MG Animation', description:'Graphic rhythm and colour compress the brand message into an editorial motion language.'},
+  volvo:{group:'Brand / 3D', project:'Volvo × GolfBox', title:'MG Animation', description:'A clear visual bridge between automotive, sport and lifestyle content.'},
+  calerie:{group:'AI / Compositing', project:'Kelanli VB Repair Serum', title:'AI 3D Composite', description:'An AI-assisted product scene focused on edges, material, light and readable brand information.'},
+  onepiece:{group:'AI / Compositing', project:'溪木源 × One Piece', title:'AI 3D Composite', description:'An AI scene composite connecting a licensed IP, product material and motion.'},
+  'xiaoyuan-1':{group:'AI / Compositing', project:'Xiaoyuan IP character', title:'Composite Shot 1', description:'Two character composites align scale, lighting and spatial relationships around the IP.'},
+  'xiaoyuan-2':{group:'AI / Compositing', project:'Xiaoyuan IP character', title:'Composite Shot 2', description:'Two character composites align scale, lighting and spatial relationships around the IP.'},
+  micro:{group:'AI / Compositing', project:'Microingredients', title:'Egypt / 3D Animation', description:'A shared 3D product system adapted for Egypt, Brazil and Yunnan.'},
+  'micro-brazil':{group:'AI / Compositing', project:'Microingredients', title:'Brazil / 3D Animation', description:'A shared 3D product system adapted for Egypt, Brazil and Yunnan.'},
+  'micro-yunnan':{group:'AI / Compositing', project:'Microingredients', title:'Yunnan / 3D Animation', description:'A shared 3D product system adapted for Egypt, Brazil and Yunnan.'},
+  'ski-single-double':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Snowboard / Ski', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-advanced':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Advanced Slopes', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-buddy':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Ski Buddies', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-end':{group:'Content system / GQ Sports', project:'GQ Sports', title:'The End of the Ski Run', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-hotel':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Ski Hotel', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-suitable':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Made for the Slopes', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-outfit':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Slope Styling', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'ski-cable':{group:'Content system / GQ Sports', project:'GQ Sports', title:'Ski Lift', description:'A scalable vertical content system for ski scenes, styling and lifestyle.'},
+  'douyin-guangdong':{group:'Content system / Douyin New Year', project:'Douyin New Year Life', title:'Guangdong Edition', description:'Regional kinetic typography versions adapted to local language and viewing rhythm.'},
+  'douyin-chuan-yu':{group:'Content system / Douyin New Year', project:'Douyin New Year Life', title:'Sichuan–Chongqing Edition', description:'Regional kinetic typography versions adapted to local language and viewing rhythm.'},
+  'douyin-dongbei':{group:'Content system / Douyin New Year', project:'Douyin New Year Life', title:'Northeast Edition', description:'Regional kinetic typography versions adapted to local language and viewing rhythm.'},
+  'gq-vw-shanghai':{group:'Content system / GQ × Volkswagen', project:'GQ × Volkswagen Dynamic Posters', title:'Shanghai', description:'A modular city-poster system with local information, pacing and visual rhythm.'},
+  'gq-vw-shenzhen':{group:'Content system / GQ × Volkswagen', project:'GQ × Volkswagen Dynamic Posters', title:'Shenzhen', description:'A modular city-poster system with local information, pacing and visual rhythm.'},
+  'gq-vw-shenzhen-2':{group:'Content system / GQ × Volkswagen', project:'GQ × Volkswagen Dynamic Posters', title:'Shenzhen II', description:'A modular city-poster system with local information, pacing and visual rhythm.'},
+  'gq-vw-chengdu':{group:'Content system / GQ × Volkswagen', project:'GQ × Volkswagen Dynamic Posters', title:'Chengdu', description:'A modular city-poster system with local information, pacing and visual rhythm.'}
+};
+const englishFallback = (item, key, fallback) => {
+  const source = String(fallback || '').trim();
+  if (key === 'group' && /generate/i.test(source)) return 'AI-generated context';
+  const mapped = key === 'group' ? ENGLISH_GROUP_LABELS[source] : ENGLISH_VALUE_LABELS[source];
+  if (mapped) return mapped;
+  const builtIn = ENGLISH_CONTENT_BY_ID[item?.id]?.[key];
+  return (typeof builtIn === 'string' && builtIn.trim()) ? builtIn : fallback;
+};
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
 const DEFAULT_GROUP_BY_ID = {
   anne:'时尚 / 编辑', meryl:'时尚 / 编辑', uniqlo:'时尚 / 编辑', end:'时尚 / 编辑',
@@ -162,22 +309,51 @@ function getAllProjects() {
     return [{...project, clips, image:clips[0]?.image || project.image}];
   });
 }
-function getContentMeta(item, fallbackProject) {
+function getContentMeta(item, fallbackProject, language = currentLanguage) {
   const custom = readContentConfig()[item.id] || {};
-  const description = Object.prototype.hasOwnProperty.call(custom, 'description') ? custom.description : (fallbackProject?.desc || '');
+  const baseGroup = custom.group || DEFAULT_GROUP_BY_ID[item.id] || item.group || CATEGORY_LABELS[fallbackProject?.category] || fallbackProject?.category || '';
+  const baseProject = custom.project || fallbackProject?.title || '';
+  const baseTitle = custom.title || item.title || fallbackProject?.subtitle || '';
+  const baseDescription = Object.prototype.hasOwnProperty.call(custom, 'description') ? custom.description : (fallbackProject?.desc || '');
+  const baseKicker = custom.kicker || item.kicker || fallbackProject?.kicker || '';
+  const english = language === 'en' ? (custom.en || {}) : {};
+  const pick = (key, fallback) => {
+    const explicit = typeof english[key] === 'string' ? english[key].trim() : '';
+    // Treat a copied Chinese value (a common legacy editor state) as blank so
+    // the built-in English recognition can replace it automatically.
+    const looksUntranslated = /[\u3400-\u9fff]/.test(explicit) || /AI-GenerateContext/i.test(explicit);
+    if (explicit && !looksUntranslated && explicit !== String(fallback).trim()) return explicit;
+    return language === 'en' ? englishFallback(item, key, fallback) : fallback;
+  };
+  const description = pick('description', baseDescription);
   const externalVideo = Object.prototype.hasOwnProperty.call(custom, 'externalVideo') ? custom.externalVideo : (item.externalVideo || '');
-  return { group:custom.group || DEFAULT_GROUP_BY_ID[item.id] || item.group || CATEGORY_LABELS[fallbackProject?.category] || fallbackProject?.category || '', project:custom.project || fallbackProject?.title || '', title:custom.title || item.title || fallbackProject?.subtitle || '', description, externalVideo, order:Number(custom.order) || 9999 };
+  return { group:pick('group', baseGroup), project:pick('project', baseProject), title:pick('title', baseTitle), description, kicker:pick('kicker', baseKicker), externalVideo, order:Number(custom.order) || 9999 };
+}
+function getClipMedia(clip) {
+  const custom = readContentConfig()[clip?.id] || {};
+  return {
+    ...clip,
+    video:Object.prototype.hasOwnProperty.call(custom, 'video') ? String(custom.video || '') : (clip?.video || ''),
+    image:Object.prototype.hasOwnProperty.call(custom, 'image') ? String(custom.image || '') : (clip?.image || '')
+  };
 }
 function getProjectMeta(project) {
   const primary = getPrimaryClip(project);
   const custom = readContentConfig()[primary.id] || readContentConfig()[project.id] || {};
-  const desc = Object.prototype.hasOwnProperty.call(custom, 'description') ? custom.description : project.desc;
-  return { group:getContentMeta(primary, project).group, title:custom.project || project.title, subtitle:custom.title || project.subtitle, desc, order:Number(custom.order) || 9999 };
+  const meta = getContentMeta(primary, project);
+  const desc = meta.description || project.desc || '';
+  return { group:meta.group, title:meta.project || project.title, subtitle:meta.title || project.subtitle, desc, order:Number(custom.order) || 9999 };
 }
 function getProjectKicker(project) {
   const primary = getPrimaryClip(project);
   const content = readContentConfig();
-  return content[primary.id]?.kicker || content[project.id]?.kicker || project.kicker || '';
+  return getContentMeta(primary, project).kicker || content[primary.id]?.kicker || content[project.id]?.kicker || project.kicker || '';
+}
+function getProjectField(project, key) {
+  const primary = getPrimaryClip(project);
+  const custom = readContentConfig()[primary.id] || readContentConfig()[project.id] || {};
+  const value = currentLanguage === 'en' ? custom.en?.[key] : null;
+  return (typeof value === 'string' && value.trim()) ? value.trim() : (currentLanguage === 'en' ? englishFallback(getPrimaryClip(project), key, project[key] || '') : (project[key] || ''));
 }
 
 function getDisplayProjects() {
@@ -209,11 +385,19 @@ function getDisplayProjects() {
 function getOrderedGroups(displayProjects) {
   const present = [...new Set(displayProjects.map(project => getProjectMeta(project).group))];
   const configured = readGroupConfig().order || [];
-  return [...configured.filter(group => present.includes(group)), ...present.filter(group => !configured.includes(group))];
+  groupDisplaySources = new Map();
+  displayProjects.forEach(project => {
+    const display = getProjectMeta(project).group;
+    const source = getContentMeta(getPrimaryClip(project), project, 'zh').group;
+    if (!groupDisplaySources.has(display)) groupDisplaySources.set(display, source);
+  });
+  const configuredDisplay = configured.map(source => [...groupDisplaySources.entries()].find(([, value]) => value === source)?.[0] || source);
+  return [...configuredDisplay.filter(group => present.includes(group)), ...present.filter(group => !configuredDisplay.includes(group))];
 }
 
 function getGroupColor(group, orderedGroups) {
-  const configured = readGroupConfig().colors?.[group];
+  const colors = readGroupConfig().colors || {};
+  const configured = colors[group] || colors[groupDisplaySources.get(group)];
   return configured || GROUP_PALETTE[Math.max(0, orderedGroups.indexOf(group)) % GROUP_PALETTE.length];
 }
 
@@ -226,7 +410,14 @@ function getSelectedClipFrames(clip) {
 function getClipFrames(clip) {
   const selected = getSelectedClipFrames(clip);
   if (selected.length) return selected;
-  return (clip.frames || [clip.image]).map((src, i) => ({ src, time:null, label:`FRAME ${String(i + 1).padStart(2,'0')}` }));
+  const media = getClipMedia(clip);
+  const mediaOverride = readContentConfig()[clip.id] || {};
+  const frames = Array.isArray(media.frames) ? [...media.frames] : [];
+  if (media.image) {
+    if (!frames.length) frames.push(media.image);
+    else if (Object.prototype.hasOwnProperty.call(mediaOverride, 'image') || (clip.image && frames[0] === clip.image)) frames[0] = media.image;
+  }
+  return frames.filter(Boolean).map((src, i) => ({ src, time:null, label:`FRAME ${String(i + 1).padStart(2,'0')}` }));
 }
 
 function getProjectPreviewFrames(project) {
@@ -252,7 +443,7 @@ function getPrimaryClip(project) {
   if (project.kind === 'series') {
     return [...project.clips].sort((a, b) => getContentMeta(a, project).order - getContentMeta(b, project).order)[0] || project.clips[0];
   }
-  return { id:project.id, title:project.subtitle, video:project.video, externalVideo:getContentMeta(project,project).externalVideo, image:project.image, frames:project.frames, format:project.format };
+  return getClipMedia({ id:project.id, title:project.subtitle, video:project.video, externalVideo:getContentMeta(project,project).externalVideo, image:project.image, frames:project.frames, format:project.format });
 }
 
 function renderProjects(filter='all') {
@@ -272,16 +463,16 @@ function renderProjects(filter='all') {
     const groupColor = getGroupColor(projectMeta.group, orderedGroups);
     const groupCount = orderedProjects.filter(project => getProjectMeta(project).group === projectMeta.group).length;
     const groupIndex = String(orderedGroups.indexOf(projectMeta.group) + 1).padStart(2,'0');
-    const groupHeader = projectMeta.group !== previousGroup ? `<div class="group-divider${hidden}${filterFirst}" data-group-key="${groupKey}" style="--group-color:${groupColor}"><span class="group-index">${groupIndex}</span><div><small>CAPABILITY / GROUP ${groupIndex}</small><strong>${escapeHtml(projectMeta.group)}</strong></div><em>${String(groupCount).padStart(2,'0')} PROJECT${groupCount > 1 ? 'S' : ''}</em></div>` : '';
+    const groupHeader = projectMeta.group !== previousGroup ? `<div class="group-divider${hidden}${filterFirst}" data-group-key="${groupKey}" style="--group-color:${groupColor}"><span class="group-index">${groupIndex}</span><div><small>${escapeHtml(t('groupCapability'))} ${groupIndex}</small><strong>${escapeHtml(projectMeta.group)}</strong></div><em>${String(groupCount).padStart(2,'0')} ${groupCount > 1 ? t('projects') : t('project')}</em></div>` : '';
     previousGroup = projectMeta.group;
-    const sub = p.kind === 'series' ? `${projectMeta.subtitle} · ${p.clips.length} 个片段` : projectMeta.subtitle;
-    const cardImage = getClipFrames(getPrimaryClip(p))[0]?.src || p.image;
+    const sub = p.kind === 'series' ? `${projectMeta.subtitle} · ${p.clips.length} ${t('clips')}` : projectMeta.subtitle;
+    const cardImage = getClipFrames(getPrimaryClip(p))[0]?.src || p.image || './assets/thumbs/frame_00.png';
     const previewFrames = getProjectPreviewFrames(p);
-    const frameLabel = p.kind === 'series' ? `${previewFrames.length} FRAMES / ${p.clips.length} CLIPS` : `${previewFrames.length} SELECTED FRAMES`;
+    const frameLabel = p.kind === 'series' ? `${previewFrames.length} ${t('frames')} / ${p.clips.length} ${t('clips')}` : `${previewFrames.length} ${t('selectedFrames')}`;
     return `${groupHeader}<article class="project-card${hidden}" data-id="${p.id}" data-category="${groupKey}" style="--group-color:${groupColor}">
       <div class="card-visual"><img src="${cardImage}" alt="${escapeHtml(projectMeta.title)} ${escapeHtml(sub)}" loading="lazy" /><span class="card-index">${String(i+1).padStart(2,'0')}</span><span class="card-play">▶</span></div>
-      <div class="card-copy"><div><span class="card-kicker">${escapeHtml(getProjectKicker(p))}</span><h3>${escapeHtml(projectMeta.title)}</h3><p>${escapeHtml(sub)}</p><p class="card-description">${escapeHtml(projectMeta.desc)}</p></div><span class="card-type">${p.kind === 'series' ? 'SERIES' : 'WORK'}</span></div>
-      <div class="card-frames"><div class="frames-head"><span class="frames-label">${frameLabel}</span>${previewFrames.length > 5 ? '<span class="frames-explore">MOVE TO EXPLORE ↔</span>' : ''}</div><div class="card-frame-strip">${previewFrames.map((frame, frameIndex) => `<button type="button" class="card-frame-button" data-clip-id="${frame.clipId}" aria-label="打开 ${escapeHtml(frame.clipTitle)} 的选定帧 ${frameIndex + 1}" title="${escapeHtml(frame.clipTitle)}"><img src="${frame.src}" alt="${escapeHtml(p.title)} · ${escapeHtml(frame.clipTitle)} · 选定帧 ${frameIndex + 1}" loading="lazy" /><span>${escapeHtml(frame.clipTitle)}</span></button>`).join('')}</div></div>
+      <div class="card-copy"><div><span class="card-kicker">${escapeHtml(getProjectKicker(p))}</span><h3>${escapeHtml(projectMeta.title)}</h3><p>${escapeHtml(sub)}</p><p class="card-description">${escapeHtml(projectMeta.desc)}</p></div><span class="card-type">${p.kind === 'series' ? t('series') : t('work')}</span></div>
+      <div class="card-frames"><div class="frames-head"><span class="frames-label">${frameLabel}</span>${previewFrames.length > 5 ? `<span class="frames-explore">${escapeHtml(t('frameExplore'))}</span>` : ''}</div><div class="card-frame-strip">${previewFrames.map((frame, frameIndex) => `<button type="button" class="card-frame-button" data-clip-id="${frame.clipId}" aria-label="${escapeHtml(frame.clipTitle)} ${escapeHtml(t('selectedFrames'))} ${frameIndex + 1}" title="${escapeHtml(frame.clipTitle)}"><img src="${frame.src}" alt="${escapeHtml(projectMeta.title)} · ${escapeHtml(frame.clipTitle)} · ${escapeHtml(t('selectedFrames'))} ${frameIndex + 1}" loading="lazy" /><span>${escapeHtml(frame.clipTitle)}</span></button>`).join('')}</div></div>
     </article>`;
   }).join('');
   grid.querySelectorAll('.project-card').forEach(card => card.addEventListener('click', () => openProject(card.dataset.id)));
@@ -387,7 +578,7 @@ function renderFilters() {
     map.set(group, (map.get(group) || 0) + 1);
     return map;
   }, new Map());
-  filtersEl.innerHTML = [`<button class="filter is-selected" data-filter="all" role="tab" aria-selected="true">全部 <span>${displayProjects.length}</span></button>`, ...Array.from(groups, ([group, count]) => `<button class="filter" style="--group-color:${getGroupColor(group, orderedGroups)}" data-filter="${encodeURIComponent(group)}" role="tab" aria-selected="false">${escapeHtml(group)} <span>${count}</span></button>`)].join('');
+  filtersEl.innerHTML = [`<button class="filter is-selected" data-filter="all" role="tab" aria-selected="true">${escapeHtml(t('all'))} <span>${displayProjects.length}</span></button>`, ...Array.from(groups, ([group, count]) => `<button class="filter" style="--group-color:${getGroupColor(group, orderedGroups)}" data-filter="${encodeURIComponent(group)}" role="tab" aria-selected="false">${escapeHtml(group)} <span>${count}</span></button>`)].join('');
   if (groupSubnav) groupSubnav.innerHTML = Array.from(groups, ([group, count]) => `<button type="button" style="--group-color:${getGroupColor(group, orderedGroups)}" data-group-filter="${encodeURIComponent(group)}"><b>${escapeHtml(group)}</b><span>${String(count).padStart(2,'0')}</span></button>`).join('');
 }
 
@@ -436,12 +627,13 @@ function loadClip(project, clip) {
   document.querySelector('#modal-title').textContent = projectMeta.title;
   document.querySelector('#modal-subtitle').textContent = clipMeta.title;
   document.querySelector('#modal-desc').textContent = clipMeta.description || projectMeta.desc;
-  document.querySelector('#modal-role').textContent = project.role;
-  document.querySelector('#modal-format').textContent = clip.format || project.format;
-  const items = getClipFrames(clip);
+  document.querySelector('#modal-role').textContent = getProjectField(project, 'role');
+  document.querySelector('#modal-format').textContent = getProjectField(project, 'format') || clip.format || project.format;
+  const media = getClipMedia(clip);
+  const items = getClipFrames(media);
   const rail = document.querySelector('#frame-rail');
   rail.innerHTML = items.map((item, i) => `<button class="frame-button${i === 0 ? ' is-active' : ''}" data-index="${i}"><img src="${item.src}" alt="${escapeHtml(projectMeta.title)} ${escapeHtml(clipMeta.title)} ${item.label}" /><span>${item.label}</span></button>`).join('');
-  modalCover.src = items[0]?.src || clip.image || project.image;
+  modalCover.src = items[0]?.src || media.image || project.image || '';
   videoWrap.classList.remove('is-playing','is-external-playing','loaded');
   video.pause();
   video.removeAttribute('src');
@@ -450,16 +642,16 @@ function loadClip(project, clip) {
   activeExternalVideo = resolveExternalVideo(clipMeta.externalVideo || clip.externalVideo);
   pendingVideoSrc = activeExternalVideo?.type === 'video'
     ? activeExternalVideo.src
-    : (!activeExternalVideo && clip.video ? resolveLocalVideo(clip.video) : '');
+    : (!activeExternalVideo && media.video ? resolveLocalVideo(media.video) : '');
   video.preload = 'none';
   if (activeExternalVideo?.type === 'embed') {
-    placeholder.textContent = '点击播放 Bilibili 视频';
+    placeholder.textContent = t('externalEmbed');
   } else if (activeExternalVideo?.type === 'page') {
-    placeholder.textContent = '点击前往外部视频页面';
+    placeholder.textContent = t('externalPage');
   } else if (pendingVideoSrc) {
-    placeholder.textContent = '点击播放视频';
+    placeholder.textContent = t('videoPlay');
   } else {
-    placeholder.textContent = '暂未设置可播放的视频';
+    placeholder.textContent = t('noVideo');
   }
   rail.querySelectorAll('.frame-button').forEach(btn => btn.addEventListener('click', () => {
     rail.querySelectorAll('.frame-button').forEach(b => b.classList.remove('is-active'));
@@ -481,7 +673,8 @@ function openProject(id, clipId) {
   const projectMeta = getProjectMeta(project);
   document.querySelector('#modal-kicker').textContent = getProjectKicker(project);
   document.querySelector('#modal-desc').textContent = projectMeta.desc;
-  document.querySelector('#modal-tags').innerHTML = project.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
+  const tags = currentLanguage === 'en' ? (readContentConfig()[getPrimaryClip(project).id]?.en?.tags || project.tags) : project.tags;
+  document.querySelector('#modal-tags').innerHTML = (Array.isArray(tags) ? tags : String(tags || '').split(',').map(item => item.trim()).filter(Boolean)).map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
   document.querySelector('#modal-year').textContent = project.year;
   renderSeriesSwitcher(project, initialClip.id);
   loadClip(project, initialClip);
@@ -534,6 +727,33 @@ function bindFilterEvents() {
   const workNav = document.querySelector('[data-work-nav]');
   if (workNav) workNav.onclick = () => activateFilter('all');
 }
+function applyLanguageUI() {
+  document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+  const set = (selector, value, html = false) => { const node = document.querySelector(selector); if (node) html ? node.innerHTML = value : node.textContent = value; };
+  set('.sidebar-copy', t('sidebarCopy'));
+  set('.sidebar-name-row h1', t('displayName'));
+  set('.profile-portrait figcaption span:last-child', t('portraitRole'));
+  set('.primary-nav a[href="#profile"]', `${t('navProfile')} <span>00</span>`, true);
+  set('.primary-nav [data-work-nav]', `${t('navWork')} <span>01</span>`, true);
+  set('.primary-nav a[href="#contact"]', `${t('navContact')} <span>02</span>`, true);
+  set('#hero-title', `<span class="proximity-line" data-variable-proximity>${t('heroTitle')}</span><br /><em class="proximity-line" data-variable-proximity>2021—2026</em>`, true);
+  window.CKYInitVariableProximity?.(document.querySelector('#hero-title'));
+  set('.hero-lede', t('heroLede'), true); set('.scroll-cue span', t('browse'));
+  set('#profile-title', t('profileTitle'), true); set('.profile-intro', t('profileIntro'));
+  set('.profile-education div span', t('education')); set('.profile-education div small', t('degree'));
+  const skillNodes = document.querySelectorAll('.profile-skills span'); t('skills').forEach((label, i) => { if (skillNodes[i]) skillNodes[i].textContent = label; });
+  set('.profile-approach p', t('approach'), true); set('.profile-links a[href="#work"]', t('viewWork')); set('#resume-view', t('fullResume')); set('#resume-download', t('downloadResume'));
+  set('.section-head h2', t('workTitle')); set('.section-note', t('workNote')); set('.site-footer h2', t('contactTitle'), true);
+  set('.contact-card-kicker', t('contactCard'));
+  const contactLabels = document.querySelectorAll('.contact-card small, .footer-contact small');
+  contactLabels.forEach(label => { const text = label.textContent.trim(); label.textContent = text === '邮箱' || text === 'Email' ? t('email') : text === '电话' || text === 'Phone' ? t('phone') : t('wechat'); });
+  document.querySelectorAll('[data-copy-label]').forEach(node => { if (!node.closest('.copy-card')?.classList.contains('is-copied')) node.textContent = t('copyCard'); });
+  document.querySelectorAll('[data-copy-card]').forEach(button => button.setAttribute('aria-label', t('copyCard')));
+  const languageToggle = document.querySelector('#language-toggle'); if (languageToggle) { languageToggle.querySelectorAll('[data-language-option]').forEach(option => option.classList.toggle('is-active', option.dataset.languageOption === currentLanguage)); languageToggle.setAttribute('aria-label', t('languageLabel')); }
+  const modalClose = document.querySelector('.modal-close'); if (modalClose) modalClose.setAttribute('aria-label', t('modalClose'));
+  const coverPlayButton = document.querySelector('#cover-play'); if (coverPlayButton) coverPlayButton.setAttribute('aria-label', t('playVideo'));
+  set('.frame-panel-head small', t('frameHint'));
+}
 function refreshContentView() {
   const activeFilter = document.querySelector('.filter.is-selected')?.dataset.filter || 'all';
   renderFilters();
@@ -541,6 +761,7 @@ function refreshContentView() {
   const nextFilter = [...document.querySelectorAll('.filter')].some(button => button.dataset.filter === activeFilter) ? activeFilter : 'all';
   activateFilter(nextFilter);
   applyResumeConfig();
+  applyLanguageUI();
 }
 window.addEventListener('storage', event => { if ([CONTENT_STORAGE_KEY, FRAME_STORAGE_KEY, GROUP_STORAGE_KEY, CUSTOM_PROJECTS_STORAGE_KEY, HIDDEN_PROJECTS_STORAGE_KEY, RESUME_STORAGE_KEY].includes(event.key)) refreshContentView(); });
 syncChannel?.addEventListener('message', refreshContentView);
@@ -552,17 +773,25 @@ window.addEventListener('resize', () => { clearTimeout(titleResizeTimer); titleR
 document.fonts?.ready.then(fitProjectTitles);
 const toggle = document.querySelector('.menu-toggle');
 toggle?.addEventListener('click', () => { const open = document.querySelector('.sidebar').classList.toggle('is-open'); toggle.setAttribute('aria-expanded', String(open)); });
+const languageToggle = document.querySelector('#language-toggle');
+languageToggle?.addEventListener('click', event => {
+  const requestedLanguage = event.target.closest('[data-language-option]')?.dataset.languageOption;
+  currentLanguage = requestedLanguage || (currentLanguage === 'en' ? 'zh' : 'en');
+  try { localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage); } catch (_) {}
+  refreshContentView();
+  if (modal.classList.contains('is-open') && activeProject) openProject(activeProject.id, activeClip?.id);
+});
 document.querySelectorAll('.primary-nav a').forEach(link => link.addEventListener('click', () => document.querySelector('.sidebar')?.classList.remove('is-open')));
-const contactCardText = '陈坤勇\n邮箱：1091851105@qq.com\n电话：15305920981\n微信：CKY15305920981';
+const contactCardText = () => currentLanguage === 'en' ? 'Chen Kunyong\nEmail: 1091851105@qq.com\nPhone: 15305920981\nWeChat: CKY15305920981' : '陈坤勇\n邮箱：1091851105@qq.com\n电话：15305920981\n微信：CKY15305920981';
 document.querySelectorAll('[data-copy-card]').forEach(button => button.addEventListener('click', async () => {
   const label = button.querySelector('[data-copy-label]');
   let copied = false;
   try {
-    await navigator.clipboard.writeText(contactCardText);
+    await navigator.clipboard.writeText(contactCardText());
     copied = true;
   } catch (_) {
     const helper = document.createElement('textarea');
-    helper.value = contactCardText;
+    helper.value = contactCardText();
     helper.setAttribute('readonly', '');
     helper.style.cssText = 'position:fixed;left:-9999px;top:0';
     document.body.appendChild(helper);
@@ -571,10 +800,10 @@ document.querySelectorAll('[data-copy-card]').forEach(button => button.addEventL
     helper.remove();
   }
   if (!label) return;
-  label.textContent = copied ? '已复制全部信息' : '复制失败，请重试';
+  label.textContent = copied ? t('copied') : t('copyFailed');
   button.classList.toggle('is-copied', copied);
   window.setTimeout(() => {
-    label.textContent = '复制名片';
+    label.textContent = t('copyCard');
     button.classList.remove('is-copied');
   }, 1800);
 }));
@@ -621,6 +850,7 @@ updateSectionNavigation();
 renderFilters();
 bindFilterEvents();
 activateFilter();
+applyLanguageUI();
 bindScrollAwareCardHover();
 
 

@@ -9,6 +9,73 @@ const AVATAR_STORAGE_KEY = 'cky-portfolio-avatar-config-v1';
 const DEFAULT_RESUME_CONFIG = { name:'陈坤勇_VOGUE定向简历.pdf', href:'陈坤勇_VOGUE定向简历.pdf' };
 const DEFAULT_AVATAR_CONFIG = { tilt:12, displacementScale:.45, background:'transparent' };
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
+// Defaults mirror the public site's bilingual labels, so the English editor
+// fields are pre-filled even for legacy entries without `content[id].en`.
+const ENGLISH_GROUP_LABELS = {
+  '三维实景合成':'Live-action compositing', 'AI辅助合成':'AI-assisted compositing',
+  '动态影像设计':'Motion design', '三维动画':'3D animation', '花字特效包装':'Kinetic typography',
+  '时尚 / 编辑':'Fashion / Editorial', '品牌 / 3D':'Brand / 3D', 'AI / 合成':'AI / Compositing',
+  '内容系统 / GQ Sports':'Content system / GQ Sports', '内容系统 / 抖音跨年':'Content system / Douyin New Year',
+  '内容系统 / 抖音跨年生活':'Content system / Douyin New Year', '内容系统 / GQ × 大众':'Content system / GQ × Volkswagen',
+  'AI-GenerateContext':'AI-generated context', 'AI内容生成':'AI-generated context'
+};
+const ENGLISH_VALUE_LABELS = {
+  '《穿普拉达的女王2》':'The Devil Wears Prada 2', '优衣库 × 上海博物馆':'UNIQLO × Shanghai Museum',
+  '科兰黎 VB 修复精华':'Kelanli VB Repair Serum', '科兰黎VB修复精华':'Kelanli VB Repair Serum',
+  '小猿 IP 形象':'Xiaoyuan IP character', '抖音跨年生活':'Douyin New Year Life', '抖音生活跨年季':'Douyin New Year Life',
+  'GQ × 大众动态海报':'GQ × Volkswagen Dynamic Posters', '个人影像':'Personal film', '毕业设计':'Graduation film',
+  '广东篇':'Guangdong edition', '川渝篇':'Sichuan–Chongqing edition', '东北篇':'Northeast edition',
+  '上海站':'Shanghai', '深圳站':'Shenzhen', '深圳二站':'Shenzhen II', '成都站':'Chengdu',
+  '单板 / 双板':'Snowboard / ski', '单板双板':'Snowboard / ski', '高级雪道':'Advanced slopes', '滑雪搭子':'Ski buddies',
+  '滑雪尽头':'The end of the ski run', '滑雪酒店':'Ski hotel', '适合雪场':'Made for the slopes', '雪场穿搭':'Slope styling', '雪场缆车':'Ski lift',
+  '动态海报':'Motion poster', '实景合成动画':'Live-action composite', 'MG 动画':'MG animation', 'MG 动画演绎':'MG animation',
+  'AI 三维合成':'AI 3D composite', '合成镜头 1':'Composite shot 1', '合成镜头 2':'Composite shot 2',
+  '埃及站 / 三维动画':'Egypt / 3D animation', '巴西站 / 三维动画':'Brazil / 3D animation', '云南站 / 三维动画':'Yunnan / 3D animation',
+  'GQ × 回力新品发布会':'GQ × Warrior New Product Launch', '测试':'Test project',
+  '《最后一件》':'The Last Item', '《最后一件》原创概念时装短片':'The Last Item — Original Fashion Short'
+};
+const ENGLISH_CLIP_LABELS = {
+  anne:{project:'The Devil Wears Prada 2', title:'Anne / Cover Composite'}, meryl:{project:'The Devil Wears Prada 2', title:'Meryl / Cover Composite'},
+  uniqlo:{project:'UNIQLO × Shanghai Museum', title:'Motion Poster'}, end:{project:'Personal film', title:'The Last Mile — Graduation Film'},
+  swisse:{title:'Plus / MG Animation'}, '1664-live':{title:'Live-action Composite'}, '1664-mg':{title:'MG Animation'}, volvo:{title:'MG Animation'},
+  calerie:{project:'Kelanli VB Repair Serum', title:'AI 3D Composite'}, onepiece:{title:'AI 3D Composite'},
+  'xiaoyuan-1':{project:'Xiaoyuan IP character', title:'Composite Shot 1'}, 'xiaoyuan-2':{project:'Xiaoyuan IP character', title:'Composite Shot 2'},
+  micro:{title:'Egypt / 3D Animation'}, 'micro-brazil':{title:'Brazil / 3D Animation'}, 'micro-yunnan':{title:'Yunnan / 3D Animation'},
+  'ski-single-double':{title:'Snowboard / Ski'}, 'ski-advanced':{title:'Advanced Slopes'}, 'ski-buddy':{title:'Ski Buddies'}, 'ski-end':{title:'The End of the Ski Run'},
+  'ski-hotel':{title:'Ski Hotel'}, 'ski-suitable':{title:'Made for the Slopes'}, 'ski-outfit':{title:'Slope Styling'}, 'ski-cable':{title:'Ski Lift'},
+  'douyin-guangdong':{project:'Douyin New Year Life', title:'Guangdong Edition'}, 'douyin-chuan-yu':{project:'Douyin New Year Life', title:'Sichuan–Chongqing Edition'}, 'douyin-dongbei':{project:'Douyin New Year Life', title:'Northeast Edition'},
+  'gq-vw-shanghai':{project:'GQ × Volkswagen Dynamic Posters', title:'Shanghai'}, 'gq-vw-shenzhen':{project:'GQ × Volkswagen Dynamic Posters', title:'Shenzhen'}, 'gq-vw-shenzhen-2':{project:'GQ × Volkswagen Dynamic Posters', title:'Shenzhen II'}, 'gq-vw-chengdu':{project:'GQ × Volkswagen Dynamic Posters', title:'Chengdu'}
+};
+const ENGLISH_DESCRIPTION_BY_ID = {
+  anne:'A fashion cover composite built around character, wardrobe, layout and shot rhythm.',
+  meryl:'Cover compositing and motion packaging that keeps the magazine tone while moving at social speed.',
+  uniqlo:'A cultural editorial motion poster that gives a static layout a sense of time.',
+  end:'A personal film study of people, space and movement beyond commercial visual work.',
+  swisse:'Product motion built from dark fields, gold rim light and a restrained brand atmosphere.', '1664-live':'A product composite that uses scale, light direction and location to carry the brand story.', '1664-mg':'Graphic rhythm and colour compress the brand message into an editorial motion language.', volvo:'A clear visual bridge between automotive, sport and lifestyle content.',
+  calerie:'An AI-assisted product scene focused on edges, material, light and readable brand information.',
+  onepiece:'An AI scene composite connecting a licensed IP, product material and motion.',
+  'xiaoyuan-1':'Two character composites align scale, lighting and spatial relationships around the IP.', 'xiaoyuan-2':'Two character composites align scale, lighting and spatial relationships around the IP.',
+  micro:'A shared 3D product system adapted for Egypt, Brazil and Yunnan.', 'micro-brazil':'A shared 3D product system adapted for Egypt, Brazil and Yunnan.', 'micro-yunnan':'A shared 3D product system adapted for Egypt, Brazil and Yunnan.',
+  'ski-single-double':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-advanced':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-buddy':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-end':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-hotel':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-suitable':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-outfit':'A scalable vertical content system for ski scenes, styling and lifestyle.', 'ski-cable':'A scalable vertical content system for ski scenes, styling and lifestyle.',
+  'douyin-guangdong':'Regional kinetic typography adapted to local language and viewing rhythm.', 'douyin-chuan-yu':'Regional kinetic typography adapted to local language and viewing rhythm.', 'douyin-dongbei':'Regional kinetic typography adapted to local language and viewing rhythm.',
+  'gq-vw-shanghai':'A modular city-poster system with local information, pacing and visual rhythm.', 'gq-vw-shenzhen':'A modular city-poster system with local information, pacing and visual rhythm.', 'gq-vw-shenzhen-2':'A modular city-poster system with local information, pacing and visual rhythm.', 'gq-vw-chengdu':'A modular city-poster system with local information, pacing and visual rhythm.'
+};
+function getEnglishEditorMeta(clip, meta) {
+  const stored = contentConfig[clip.id]?.en || {};
+  const defaults = ENGLISH_CLIP_LABELS[clip.id] || {};
+  const inferredGroup = /generate/i.test(String(meta.group || '')) ? 'AI-generated context' : ENGLISH_GROUP_LABELS[meta.group];
+  const choose = (value, source, mapped, fallback) => {
+    const explicit = typeof value === 'string' ? value.trim() : '';
+    const looksUntranslated = /[\u3400-\u9fff]/.test(explicit) || /AI-GenerateContext/i.test(explicit);
+    return explicit && !looksUntranslated && explicit !== String(source || '').trim() ? explicit : (mapped || fallback);
+  };
+  return {
+    group:choose(stored.group, meta.group, inferredGroup, defaults.group || meta.group),
+    project:choose(stored.project, meta.project, ENGLISH_VALUE_LABELS[meta.project], defaults.project || meta.project),
+    title:choose(stored.title, meta.title, ENGLISH_VALUE_LABELS[meta.title], defaults.title || meta.title),
+    kicker:stored.kicker || meta.kicker || '', description:choose(stored.description, meta.description, ENGLISH_DESCRIPTION_BY_ID[clip.id], '')
+  };
+}
 const DEFAULT_KICKER_BY_ID = {
   anne:'FASHION EDITORIAL / 01', meryl:'FASHION EDITORIAL / 02', uniqlo:'EDITORIAL MOTION / 11', end:'PERSONAL FILM / 12',
   swisse:'BRAND MOTION / 03', '1664-live':'WORLD BUILDING / 04', '1664-mg':'WORLD BUILDING / 05', volvo:'PLATFORM / 08',
@@ -84,8 +151,16 @@ const metaTitle = document.querySelector('#meta-title');
 const metaKicker = document.querySelector('#meta-kicker');
 const metaOrder = document.querySelector('#meta-order');
 const metaDescription = document.querySelector('#meta-description');
+const metaEnGroup = document.querySelector('#meta-en-group');
+const metaEnProject = document.querySelector('#meta-en-project');
+const metaEnTitle = document.querySelector('#meta-en-title');
+const metaEnKicker = document.querySelector('#meta-en-kicker');
+const metaEnDescription = document.querySelector('#meta-en-description');
 const metaExternalVideo = document.querySelector('#meta-external-video');
 const externalVideoStatus = document.querySelector('#external-video-status');
+const metaVideoPath = document.querySelector('#meta-video-path');
+const metaImagePath = document.querySelector('#meta-image-path');
+const mediaPathStatus = document.querySelector('#media-path-status');
 const renameGroupName = document.querySelector('#rename-group-name');
 const renameProjectName = document.querySelector('#rename-project-name');
 const groupColor = document.querySelector('#group-color');
@@ -153,7 +228,36 @@ function readAvatarConfig() {
   } catch { return {...DEFAULT_AVATAR_CONFIG}; }
 }
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
-function getMeta(clip) { const custom = contentConfig[clip.id] || {}; return { group:custom.group || clip.group, project:custom.project || clip.project, title:custom.title || clip.title, kicker:custom.kicker || clip.kicker || DEFAULT_KICKER_BY_ID[clip.id] || '', description:custom.description || '', externalVideo:Object.prototype.hasOwnProperty.call(custom,'externalVideo') ? custom.externalVideo : (clip.externalVideo || ''), order:Number(custom.order) || clips.indexOf(clip) + 1 }; }
+const DESCRIPTION_BY_ID = {
+  anne:'人物、服装、封面版式和镜头节奏的合成实验。用一秒钟建立时尚语气，让人物进入可以被传播的编辑语境。',
+  meryl:'围绕人物姿态、版式重心和色彩关系完成封面合成与动效包装，保持杂志感，同时照顾社交平台的观看速度。',
+  swisse:'以深色背景、金色边缘光和瓶身轮廓建立克制的品牌氛围，让产品信息自然进入观看路径。',
+  '1664-live':'把产品置入真实空间，通过尺度关系、光线方向和场景氛围，让品牌权益成为地点感的一部分。',
+  '1664-mg':'用图形、色彩和节奏压缩信息，把商业权益转译成更接近编辑内容的动态图形语言。',
+  volvo:'在汽车、运动和生活方式之间寻找视觉连接，用清晰的节奏完成从产品信息到生活场景的过渡。',
+  calerie:'把产品放进一个可信但不平庸的场景，关注边缘、材质、光线方向和品牌信息的可读性。',
+  onepiece:'以联名 IP 与产品为核心完成 AI 场景、材质和动态关系的合成表达。',
+  'xiaoyuan-1':'围绕 IP 形象完成两组场景合成镜头，统一角色尺度、光线和空间关系。', 'xiaoyuan-2':'围绕 IP 形象完成两组场景合成镜头，统一角色尺度、光线和空间关系。',
+  micro:'同一产品叙事适配埃及、巴西、云南等不同站点，建立统一的三维视觉资产与输出规则。', 'micro-brazil':'同一产品叙事适配埃及、巴西、云南等不同站点，建立统一的三维视觉资产与输出规则。', 'micro-yunnan':'同一产品叙事适配埃及、巴西、云南等不同站点，建立统一的三维视觉资产与输出规则。',
+  'ski-single-double':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-advanced':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-buddy':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-end':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-hotel':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-suitable':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-outfit':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。', 'ski-cable':'围绕滑雪场景、穿搭与生活方式建立一套可延展的竖版内容系统。每个片段拥有独立的关键帧与播放入口，同时共享同一套视觉规则。',
+  'douyin-guangdong':'同一传播主题下适配广东、川渝、东北等地区语境，处理字体动线、信息密度和平台观看速度。', 'douyin-chuan-yu':'同一传播主题下适配广东、川渝、东北等地区语境，处理字体动线、信息密度和平台观看速度。', 'douyin-dongbei':'同一传播主题下适配广东、川渝、东北等地区语境，处理字体动线、信息密度和平台观看速度。',
+  'gq-vw-shanghai':'围绕不同城市站点建立统一的动态海报系统，在同一视觉骨架下调整信息、节奏与城市内容。', 'gq-vw-shenzhen':'围绕不同城市站点建立统一的动态海报系统，在同一视觉骨架下调整信息、节奏与城市内容。', 'gq-vw-shenzhen-2':'围绕不同城市站点建立统一的动态海报系统，在同一视觉骨架下调整信息、节奏与城市内容。', 'gq-vw-chengdu':'围绕不同城市站点建立统一的动态海报系统，在同一视觉骨架下调整信息、节奏与城市内容。',
+};
+function getMeta(clip) { const custom = contentConfig[clip.id] || {}; return { group:custom.group || clip.group, project:custom.project || clip.project, title:custom.title || clip.title, kicker:custom.kicker || clip.kicker || DEFAULT_KICKER_BY_ID[clip.id] || '', description:custom.description || DESCRIPTION_BY_ID[clip.id] || '', externalVideo:Object.prototype.hasOwnProperty.call(custom,'externalVideo') ? custom.externalVideo : (clip.externalVideo || ''), order:Number(custom.order) || clips.indexOf(clip) + 1 }; }
+function getClipMedia(clip) {
+  const custom = contentConfig[clip.id] || {};
+  return {
+    video:Object.prototype.hasOwnProperty.call(custom,'video') ? String(custom.video || '') : String(clip.video || ''),
+    image:Object.prototype.hasOwnProperty.call(custom,'image') ? String(custom.image || '') : String(clip.image || '')
+  };
+}
+function resolveEditorVideoPath(value) {
+  const path = String(value || '').trim();
+  if (!path) return '';
+  if (/^(?:https?:|blob:|data:|\/|\.\/)/i.test(path)) return path;
+  if (/^assets[\\/]/i.test(path)) return './' + path;
+  return path;
+}
 function getGroupNames() {
   const effective = [...new Set(clips.map(clip => getMeta(clip).group))];
   return [...groupConfig.order, ...effective.filter(group => !groupConfig.order.includes(group))].filter((group, index, all) => group && all.indexOf(group) === index);
@@ -245,13 +349,28 @@ function selectClip(clip) {
   if (![...metaGroup.options].some(option => option.value === meta.group)) metaGroup.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(meta.group)}">${escapeHtml(meta.group)}</option>`);
   if (![...metaProject.options].some(option => option.value === meta.project)) metaProject.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(meta.project)}">${escapeHtml(meta.project)}</option>`);
   metaGroup.value = meta.group; metaProject.value = meta.project; metaTitle.value = meta.title; metaKicker.value = meta.kicker; metaOrder.value = meta.order; metaDescription.value = meta.description;
+  const english = getEnglishEditorMeta(clip, meta);
+  if (metaEnGroup) metaEnGroup.value = english.group || '';
+  if (metaEnProject) metaEnProject.value = english.project || '';
+  if (metaEnTitle) metaEnTitle.value = english.title || '';
+  if (metaEnKicker) metaEnKicker.value = english.kicker || '';
+  if (metaEnDescription) metaEnDescription.value = english.description || '';
   metaExternalVideo.value = meta.externalVideo;
   externalVideoStatus.textContent = meta.externalVideo ? '当前作品会优先使用外部视频。' : '当前作品使用本地视频。';
+  const media = getClipMedia(clip);
+  if (metaVideoPath) metaVideoPath.value = media.video;
+  if (metaImagePath) metaImagePath.value = media.image;
+  if (mediaPathStatus) mediaPathStatus.textContent = '路径已载入，可直接修改。';
   updateGroupManager(meta.group);
   sourceVideo.autoplay = false;
-  if (clip.video) sourceVideo.src = clip.video;
+  sourceVideo.removeAttribute('crossorigin');
+  sourceVideo.preload = 'auto';
+  sourceVideo.dataset.mediaPath = media.video;
+  sourceVideo.dataset.fallbackTried = '0';
+  if (media.video) sourceVideo.src = resolveEditorVideoPath(media.video);
   else sourceVideo.removeAttribute('src');
   sourceVideo.load();
+  if (sourceVideo.readyState >= 2) enableVideoControls();
   timeline.value = 0;
   timeline.disabled = true;
   videoTimeline.value = 0;
@@ -261,7 +380,7 @@ function selectClip(clip) {
   clearButton.disabled = false;
   playerShell.classList.remove('is-portrait');
   playerShell.style.aspectRatio = '';
-  emptyPlayer.textContent = clip.video ? '视频载入中…' : '该作品仅使用外部视频；展示帧请使用上传的封面';
+  emptyPlayer.textContent = media.video ? '视频载入中…' : '该作品暂无本地视频；可填写路径或使用外部视频';
   emptyPlayer.parentElement.classList.remove('has-video');
   renderSelectedFrames();
 }
@@ -296,11 +415,12 @@ sourceVideo.addEventListener('seeking', () => { if (!isScrubbing) { timeline.val
 sourceVideo.addEventListener('seeked', () => {
   clearTimeout(seekFallbackTimer);
   pauseAfterSeek();
-  isScrubbing = false;
-  pendingSeekTime = null;
-  timeline.value = sourceVideo.currentTime;
-  videoTimeline.value = sourceVideo.currentTime;
-  currentTimeEl.textContent = formatTime(sourceVideo.currentTime);
+  if (!isScrubbing) {
+    pendingSeekTime = null;
+    timeline.value = sourceVideo.currentTime;
+    videoTimeline.value = sourceVideo.currentTime;
+    currentTimeEl.textContent = formatTime(sourceVideo.currentTime);
+  }
 });
 sourceVideo.addEventListener('play', () => { videoPlay.textContent = 'Ⅱ'; });
 sourceVideo.addEventListener('pause', () => { videoPlay.textContent = '▶'; });
@@ -331,35 +451,42 @@ function seekVideo(time) {
     currentTimeEl.textContent = formatTime(sourceVideo.currentTime);
   }, 1500);
 }
-function finishScrub() {
-  if (!isScrubbing) return;
-  const target = pendingSeekTime;
-  if (target === null) { isScrubbing = false; return; }
-  seekVideo(target);
-}
-function beginScrub() { isScrubbing = true; pauseAfterSeek(); }
 function updateScrub(input) {
-  isScrubbing = true;
+  isScrubbing = false;
+  pendingSeekTime = null;
   pauseAfterSeek();
   const nextTime = Math.max(0, Math.min(Number(input.max) || 0, Number(input.value) || 0));
-  pendingSeekTime = nextTime;
+  if (Number.isFinite(sourceVideo.duration) && sourceVideo.duration > 0) sourceVideo.currentTime = nextTime;
   timeline.value = nextTime;
   videoTimeline.value = nextTime;
   currentTimeEl.textContent = formatTime(nextTime);
 }
 [timeline, videoTimeline].forEach(input => {
-  input.addEventListener('pointerdown', beginScrub);
-  input.addEventListener('pointerup', finishScrub);
-  input.addEventListener('pointercancel', finishScrub);
   input.addEventListener('input', () => updateScrub(input));
-  input.addEventListener('change', finishScrub);
+  input.addEventListener('change', () => updateScrub(input));
 });
-window.addEventListener('pointerup', finishScrub);
-window.addEventListener('blur', finishScrub);
-sourceVideo.addEventListener('error', () => { if (currentClip) { saveStatus.textContent = '这个视频载入失败，请检查文件路径'; markButton.disabled = true; timeline.disabled = true; videoTimeline.disabled = true; } });
+sourceVideo.addEventListener('error', () => {
+  if (!currentClip) return;
+  const rawPath = String(sourceVideo.dataset.mediaPath || '').trim();
+  const canTryAssetsFallback = rawPath && sourceVideo.dataset.fallbackTried !== '1' && !/^(?:https?:|blob:|data:|\/|\.\/|assets[\\/])/i.test(rawPath);
+  if (canTryAssetsFallback) {
+    sourceVideo.dataset.fallbackTried = '1';
+    sourceVideo.src = './assets/videos/' + rawPath;
+    sourceVideo.load();
+    return;
+  }
+  saveStatus.textContent = '这个视频载入失败，请检查文件路径';
+  markButton.disabled = true;
+  timeline.disabled = true;
+  videoTimeline.disabled = true;
+});
 markButton.addEventListener('click', () => {
   saveStatus.textContent = '正在捕获当前帧…';
-  if (!currentClip || sourceVideo.readyState < 2) { saveStatus.textContent = `无法捕获：${currentClip ? `readyState ${sourceVideo.readyState}` : '尚未选择片段'}`; return; }
+  if (!currentClip) { saveStatus.textContent = '无法捕获：尚未选择片段'; return; }
+  if (sourceVideo.readyState < 2 || !sourceVideo.videoWidth || !sourceVideo.videoHeight) {
+    saveStatus.textContent = '视频画面尚未准备好，请稍等片刻或拖动时间轴后重试';
+    return;
+  }
   try {
     const maxWidth = 640;
     const scale = Math.min(1, maxWidth / sourceVideo.videoWidth);
@@ -370,7 +497,20 @@ markButton.addEventListener('click', () => {
     const frames = selections[currentClip.id]?.frames || [];
     if (frames.length >= 4) { saveStatus.textContent = '最多选择 4 帧；请先删除后再加入'; return; }
     if (frames.some(frame => Math.abs(frame.time - sourceVideo.currentTime) < 0.15)) { saveStatus.textContent = '这个时间点已经选择过了'; return; }
-    frames.push({ time:Number(sourceVideo.currentTime.toFixed(2)), dataUrl:captureCanvas.toDataURL('image/jpeg', .82), label:`FRAME ${String(frames.length + 1).padStart(2,'0')}` });
+    let dataUrl;
+    try {
+      dataUrl = captureCanvas.toDataURL('image/jpeg', .82);
+    } catch (error) {
+      if (error?.name === 'SecurityError' || /tainted|cross-origin|跨域/i.test(String(error?.message || ''))) {
+        const localServerHint = location.protocol === 'file:'
+          ? '请先通过本地 HTTP 服务器打开 frame-selector.html（不要直接双击文件）'
+          : '请改用与本页面同域的本地相对路径（如 assets/videos/xxx.mp4），或为视频服务器开启 CORS';
+        saveStatus.textContent = `捕获失败：视频画面受跨域保护。${localServerHint}。`;
+        return;
+      }
+      throw error;
+    }
+    frames.push({ time:Number(sourceVideo.currentTime.toFixed(2)), dataUrl, label:`FRAME ${String(frames.length + 1).padStart(2,'0')}` });
     selections[currentClip.id] = { frames, updatedAt:new Date().toISOString() };
     renderLibrary(); renderSelectedFrames(); persist();
   } catch (error) { saveStatus.textContent = `捕获失败：${error.message}`; }
@@ -425,6 +565,50 @@ document.querySelector('#save-meta').addEventListener('click', () => {
   });
   contentConfig[currentClip.id] = {...(contentConfig[currentClip.id] || {}), group:nextGroup, project:nextProject, title:metaTitle.value.trim() || currentClip.title, kicker:nextKicker, description:metaDescription.value.trim(), order:Math.max(1, Number(metaOrder.value) || clips.indexOf(currentClip) + 1) };
   persistContent(); renderLibrary(); selectClip(currentClip); saveStatus.textContent = '分组与项目信息已保存';
+});
+document.querySelector('#save-media-path')?.addEventListener('click', () => {
+  if (!currentClip) { if (mediaPathStatus) mediaPathStatus.textContent = '请先从左侧选择一个作品。'; return; }
+  const previous = getClipMedia(currentClip);
+  const video = metaVideoPath?.value.trim() || '';
+  const image = metaImagePath?.value.trim() || '';
+  contentConfig[currentClip.id] = {...(contentConfig[currentClip.id] || {}), video, image};
+  const customProject = customProjects.find(project => project.id === currentClip.id);
+  if (customProject) {
+    customProject.video = video;
+    customProject.image = image;
+    const hasSelectedFrames = Array.isArray(selections[currentClip.id]?.frames) && selections[currentClip.id].frames.length > 0;
+    const defaultFrames = Array.isArray(customProject.frames) ? customProject.frames : [];
+    if (!hasSelectedFrames && (!defaultFrames.length || defaultFrames[0] === previous.image)) customProject.frames = image ? [image] : [];
+  }
+  persistContent(); persistProjectLibrary(); refreshClips(); renderLibrary(); populateMetaOptions();
+  const nextClip = clips.find(clip => clip.id === currentClip.id);
+  if (nextClip) selectClip(nextClip);
+  if (mediaPathStatus) mediaPathStatus.textContent = image ? '本地视频与封面路径已保存。' : '本地视频路径已保存，封面留空；请稍后从视频中选择展示帧。';
+});
+document.querySelector('#save-en-meta')?.addEventListener('click', () => {
+  if (!currentClip) { saveStatus.textContent = '请先从左侧选择一个片段'; return; }
+  const english = {
+    group:metaEnGroup?.value.trim() || '', project:metaEnProject?.value.trim() || '', title:metaEnTitle?.value.trim() || '',
+    kicker:metaEnKicker?.value.trim() || '', description:metaEnDescription?.value.trim() || ''
+  };
+  const previous = contentConfig[currentClip.id] || {};
+  const previousMeta = getMeta(currentClip);
+  clips.filter(clip => getMeta(clip).group === previousMeta.group).forEach(clip => {
+    const entry = contentConfig[clip.id] || {};
+    contentConfig[clip.id] = {...entry, en:{...(entry.en || {}), group:english.group}};
+  });
+  clips.filter(clip => getMeta(clip).project === previousMeta.project).forEach(clip => {
+    const entry = contentConfig[clip.id] || {};
+    contentConfig[clip.id] = {...entry, en:{...(entry.en || {}), project:english.project}};
+  });
+  contentConfig[currentClip.id] = {...(contentConfig[currentClip.id] || previous), en:english};
+  persistContent(); renderLibrary(); selectClip(currentClip); saveStatus.textContent = 'English fields saved';
+});
+document.querySelector('#clear-en-meta')?.addEventListener('click', () => {
+  if (!currentClip) { saveStatus.textContent = '请先从左侧选择一个片段'; return; }
+  const previous = {...(contentConfig[currentClip.id] || {})}; delete previous.en;
+  contentConfig[currentClip.id] = previous;
+  persistContent(); renderLibrary(); selectClip(currentClip); saveStatus.textContent = 'English overrides cleared';
 });
 function normalizeExternalVideoUrl(value) {
   const raw = value.trim();
@@ -481,11 +665,16 @@ document.querySelector('#rename-project').addEventListener('click', () => {
   if (!nextProject || nextProject === oldProject) { saveStatus.textContent = '请输入一个不同的新项目名称'; return; }
   clips.filter(clip => getMeta(clip).project === oldProject).forEach(clip => {
     contentConfig[clip.id] = {...(contentConfig[clip.id] || {}), project:nextProject};
+    const customProject = customProjects.find(project => project.id === clip.id);
+    if (customProject) customProject.title = nextProject;
   });
   persistContent();
+  persistProjectLibrary();
   renameProjectName.value = '';
+  refreshClips();
   renderLibrary();
-  selectClip(currentClip);
+  const nextClip = clips.find(clip => clip.id === currentClip.id);
+  if (nextClip) selectClip(nextClip);
   saveStatus.textContent = `项目已重命名为“${nextProject}”`;
 });
 function moveGroup(direction) {
@@ -566,6 +755,9 @@ function clearCurrentClip() {
   emptyPlayer.parentElement.classList.remove('has-video');
   metaExternalVideo.value = '';
   externalVideoStatus.textContent = '未选择作品。';
+  if (metaVideoPath) metaVideoPath.value = '';
+  if (metaImagePath) metaImagePath.value = '';
+  if (mediaPathStatus) mediaPathStatus.textContent = '未选择作品。';
   timeline.disabled = true; videoTimeline.disabled = true; markButton.disabled = true; clearButton.disabled = true;
   renderSelectedFrames();
 }
@@ -578,14 +770,14 @@ document.querySelector('#add-project').addEventListener('click', () => {
   const imagePath = addImage.value.trim();
   const kicker = addKicker.value.trim() || 'CUSTOM WORK / NEW';
   if (externalVideo === null) { addStatus.textContent = '外部视频链接格式不正确，请使用完整的 http:// 或 https:// 地址'; return; }
-  if (!group || !projectName || !title || (!videoPath && !externalVideo) || !imagePath) {
-    addStatus.textContent = '请填写分组、项目名称、片段名称、封面路径，以及本地视频或外部链接中的至少一项';
+  if (!group || !projectName || !title || (!videoPath && !externalVideo)) {
+    addStatus.textContent = '请填写分组、项目名称、片段名称，以及本地视频或外部链接中的至少一项';
     return;
   }
   const id = `custom-${Date.now().toString(36)}`;
   const project = {
     id, group, category:'custom', kicker, title:projectName, subtitle:title,
-    image:imagePath, video:videoPath, externalVideo, frames:[imagePath], desc:addDescription.value.trim(),
+    image:imagePath, video:videoPath, externalVideo, frames:imagePath ? [imagePath] : [], desc:addDescription.value.trim(),
     tags:addTags.value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean),
     role:addRole.value.trim() || '视觉设计', format:addFormat.value.trim() || '视频', year:addYear.value.trim() || String(new Date().getFullYear())
   };
