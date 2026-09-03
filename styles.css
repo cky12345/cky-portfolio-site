@@ -927,12 +927,14 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
 /* MOBILE WORK HEADING V2 */
 @media (max-width:720px) {
   .work-section .section-head h2 {
-    display:block; width:max-content; max-width:none;
-    white-space:nowrap; font-size:clamp(28px,8.8vw,38px);
+    display:block; width:100%; max-width:100%;
+    white-space:normal; overflow-wrap:anywhere;
+    font-size:clamp(28px,8.8vw,38px);
     line-height:1; letter-spacing:-.055em;
   }
   .work-section .filters {
-    width:max-content; min-width:100%; max-width:none;
+    width:100%; min-width:0; max-width:100%;
+    box-sizing:border-box;
     flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
   }
 }

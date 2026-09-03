@@ -48,7 +48,10 @@ const GROUP_STORAGE_KEY = 'cky-portfolio-group-config-v1';
 const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
-const LANGUAGE_STORAGE_KEY = 'cky-portfolio-language-v1';
+// Bump the key so browsers that previously persisted an English choice get
+// the new Chinese-first default once. Future manual language choices persist
+// under this key as normal.
+const LANGUAGE_STORAGE_KEY = 'cky-portfolio-language-v2';
 const DEFAULT_RESUME = { name:'陈坤勇_VOGUE定向简历.pdf', href:'./resume/陈坤勇_VOGUE定向简历.pdf' };
 const normalizeResumeHref = value => {
   const href = String(value || '').trim();
