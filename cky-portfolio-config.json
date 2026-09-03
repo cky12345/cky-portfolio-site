@@ -1,6 +1,6 @@
 {
-  "version": 96,
-  "exportedAt": "2026-09-03T23:35:00.228Z",
+  "version": 99,
+  "exportedAt": "2026-09-03T23:38:41.092Z",
   "frames": {
     "anne": {
       "frames": [
@@ -45,19 +45,14 @@
     "volvo": {
       "frames": [
         {
-          "time": 3.16,
-          "label": "FRAME 01",
-          "src": "assets/frames/volvo-01.jpg"
-        },
-        {
           "time": 6.96,
           "label": "FRAME 02",
-          "src": "assets/frames/volvo-02.jpg"
+          "src": "assets/frames/volvo-01.jpg"
         },
         {
           "time": 13.07,
           "label": "FRAME 03",
-          "src": "assets/frames/volvo-03.jpg"
+          "src": "assets/frames/volvo-02.jpg"
         }
       ],
       "updatedAt": "2026-08-26T03:07:38.163Z"
