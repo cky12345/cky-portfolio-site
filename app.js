@@ -71,7 +71,7 @@ if (new URLSearchParams(location.search).has('dump-config')) {
       };
       console.log('CKY_CONFIG_DUMP', JSON.stringify(payload));
       document.documentElement.setAttribute('data-cky-config-dump', btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
-      fetch('http://127.0.0.1:8010/__migrate-config', {method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:JSON.stringify(payload)})
+      fetch('http://127.0.0.1:8000/__migrate-config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
         .then(response => response.text()).then(result => console.log('CKY_CONFIG_MIGRATED', result))
         .catch(error => console.warn('CKY_CONFIG_MIGRATE_FAILED', String(error)));
     } catch (error) { console.warn('CKY_CONFIG_DUMP_FAILED', String(error)); }

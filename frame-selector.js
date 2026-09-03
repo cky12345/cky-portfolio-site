@@ -264,12 +264,26 @@ function getGroupNames() {
 }
 function getSortedClips() { const groups = getGroupNames(); return [...clips].sort((a,b) => groups.indexOf(getMeta(a).group) - groups.indexOf(getMeta(b).group) || getMeta(a).order - getMeta(b).order); }
 function announceSync(type='content') { syncChannel?.postMessage({type, at:Date.now()}); }
-function persistContent() { try { localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentConfig)); announceSync('content'); } catch {} }
-function persistGroupConfig() { try { localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(groupConfig)); announceSync('groups'); } catch {} }
+function buildConfigPayload() { return { version:5, exportedAt:new Date().toISOString(), frames:selections, content:contentConfig, groups:groupConfig, customProjects, hiddenIds, resume:resumeConfig, avatar:avatarConfig }; }
+let projectSyncTimer = 0;
+async function syncConfigToProjectFiles({silent=false} = {}) {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/__migrate-config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(buildConfigPayload())});
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (!silent) saveStatus.textContent = '已同步到项目文件，可在 Git 中提交';
+    return true;
+  } catch (error) {
+    if (!silent) saveStatus.textContent = '浏览器本地已保存；请先用“启动本地预览.cmd”运行同步服务';
+    return false;
+  }
+}
+function queueProjectSync() { clearTimeout(projectSyncTimer); projectSyncTimer = setTimeout(() => syncConfigToProjectFiles({silent:true}), 900); }
+function persistContent() { try { localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentConfig)); announceSync('content'); queueProjectSync(); } catch {} }
+function persistGroupConfig() { try { localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(groupConfig)); announceSync('groups'); queueProjectSync(); } catch {} }
 function persistResumeConfig() {
   try {
     localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(resumeConfig));
-    announceSync('resume');
+    announceSync('resume'); queueProjectSync();
     return true;
   } catch {
     resumeStatus.textContent = '保存失败：PDF 文件可能过大，请使用小于 3 MB 的文件';
@@ -279,7 +293,7 @@ function persistResumeConfig() {
 function persistAvatarConfig() {
   try {
     localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(avatarConfig));
-    announceSync('avatar');
+    announceSync('avatar'); queueProjectSync();
     return true;
   } catch {
     avatarSettingsStatus.textContent = '参数保存失败，请检查浏览器存储权限';
@@ -290,7 +304,7 @@ function persistProjectLibrary() {
   try {
     localStorage.setItem(CUSTOM_PROJECTS_STORAGE_KEY, JSON.stringify(customProjects));
     localStorage.setItem(HIDDEN_PROJECTS_STORAGE_KEY, JSON.stringify(hiddenIds));
-    announceSync('projects');
+    announceSync('projects'); queueProjectSync();
   } catch {
     if (addStatus) addStatus.textContent = '保存失败：浏览器本地存储空间不足';
   }
@@ -315,7 +329,7 @@ function updateGroupManager(group) {
 function persist() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
-    announceSync('frames');
+    announceSync('frames'); queueProjectSync();
     saveStatus.textContent = '已自动保存 · ' + new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
   } catch {
     saveStatus.textContent = '本次会话已保存 · 建议导出 JSON 备份';
@@ -517,11 +531,12 @@ markButton.addEventListener('click', () => {
 });
 clearButton.addEventListener('click', () => { if (!currentClip) return; delete selections[currentClip.id]; persist(); renderLibrary(); renderSelectedFrames(); });
 document.querySelector('#export-config').addEventListener('click', () => {
-  const payload = { version:5, exportedAt:new Date().toISOString(), frames:selections, content:contentConfig, groups:groupConfig, customProjects, hiddenIds, resume:resumeConfig, avatar:avatarConfig };
+  const payload = buildConfigPayload();
   const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a'); link.href = url; link.download = 'cky-portfolio-config.json'; link.click(); URL.revokeObjectURL(url);
 });
+document.querySelector('#sync-project')?.addEventListener('click', () => syncConfigToProjectFiles());
 document.querySelector('#import-config').addEventListener('change', event => {
   const file = event.target.files?.[0]; if (!file) return;
   const reader = new FileReader();

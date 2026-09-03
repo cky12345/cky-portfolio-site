@@ -5,6 +5,11 @@ const path = require('path');
 const root = path.resolve(__dirname);
 const host = '127.0.0.1';
 const port = 8000;
+const configPath = path.join(root, 'cky-portfolio-config.json');
+function writeConfigArtifacts(merged) {
+  fs.writeFileSync(configPath, JSON.stringify(merged, null, 2), 'utf8');
+  fs.writeFileSync(path.join(root, 'cky-portfolio-config-live.js'), `window.__CKY_PORTFOLIO_CONFIG__ = ${JSON.stringify(merged)};`, 'utf8');
+}
 const mimeTypes = {
   '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8',
   '.json':'application/json; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg',
@@ -18,16 +23,24 @@ function sendError(response, status, message) {
 }
 
 http.createServer((request, response) => {
+  if (request.method === 'OPTIONS' && request.url === '/__migrate-config') {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    response.writeHead(204); response.end(); return;
+  }
   if (request.method === 'POST' && request.url === '/__migrate-config') {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     let body = '';
-    request.on('data', chunk => { body += chunk; if (body.length > 2_000_000) request.destroy(); });
+    request.on('data', chunk => { body += chunk; if (body.length > 25_000_000) request.destroy(); });
     request.on('end', () => {
       try {
         const incoming = JSON.parse(body);
-        const configPath = path.join(root, 'cky-portfolio-config.json');
         const current = JSON.parse(fs.readFileSync(configPath, 'utf8'));
         const merged = {...current, ...incoming, version:Math.max(Number(current.version) || 0, Number(incoming.version) || 0) + 1, exportedAt:new Date().toISOString()};
-        fs.writeFileSync(configPath, JSON.stringify(merged, null, 2), 'utf8');
+        writeConfigArtifacts(merged);
         response.writeHead(200, {'Content-Type':'application/json; charset=utf-8'});
         response.end(JSON.stringify({ok:true, configPath}));
       } catch (error) { sendError(response, 400, String(error)); }

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="frame-selector.css?v=9" />
 </head>
 <body>
-  <header class="tool-header"><a class="tool-brand" href="index.html#work">CKY <span>/ PORTFOLIO</span></a><div class="tool-actions"><button type="button" id="export-config" class="button button-dark">导出配置 JSON</button><label class="button button-light">导入配置<input id="import-config" type="file" accept="application/json" hidden /></label><a class="button button-light" href="index.html#work">返回作品集</a></div></header>
+  <header class="tool-header"><a class="tool-brand" href="index.html#work">CKY <span>/ PORTFOLIO</span></a><div class="tool-actions"><button type="button" id="sync-project" class="button button-dark">同步到项目文件</button><button type="button" id="export-config" class="button button-light">导出配置 JSON</button><label class="button button-light">导入配置<input id="import-config" type="file" accept="application/json" hidden /></label><a class="button button-light" href="index.html#work">返回作品集</a></div></header>
   <main class="tool-layout">
     <aside class="library-panel"><div class="tool-kicker">FRAME SELECTOR</div><h1>选择你的展示帧。</h1><p class="tool-intro">直接拖动时间轴，暂停在想要的画面，点击“加入展示帧”。选择会自动保存在当前浏览器，也可以导出为 JSON。</p><div id="library" class="library"></div></aside>
     <section class="editor-panel">
@@ -42,7 +42,7 @@
         <p class="project-admin-status" id="resume-status">当前使用：陈坤勇_VOGUE定向简历.pdf</p>
       </section>
       <section class="project-admin" aria-labelledby="project-admin-title">
-        <div class="selected-heading"><span id="project-admin-title">新增 / 删除作品</span><small>媒体文件先放入作品集目录，再填写相对路径；封面可留空，之后从视频中选择静帧</small></div>
+        <div class="selected-heading"><span id="project-admin-title">新增 / 删除作品</span><small>媒体文件先放入作品集目录，再填写相对路径；保存后会自动尝试同步项目文件，也可点击顶部“同步到项目文件”</small></div>
         <datalist id="group-suggestions"></datalist>
         <div class="project-admin-grid">
           <label>分组 *<input id="add-project-group" list="group-suggestions" type="text" placeholder="例如：三维实景合成" /></label>
