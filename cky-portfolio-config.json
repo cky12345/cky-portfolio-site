@@ -1,6 +1,6 @@
 {
-  "version": 23,
-  "exportedAt": "2026-09-03T05:13:14.513Z",
+  "version": 74,
+  "exportedAt": "2026-09-03T15:03:25.813Z",
   "frames": {
     "anne": {
       "frames": [
@@ -390,27 +390,77 @@
     "custom-mtko1ifz": {
       "frames": [
         {
-          "time": 3.83,
+          "time": 4.41,
           "label": "FRAME 01",
           "src": "assets/frames/custom-mtko1ifz-01.jpg"
         },
         {
-          "time": 14.32,
+          "time": 13.9,
           "label": "FRAME 02",
           "src": "assets/frames/custom-mtko1ifz-02.jpg"
         },
         {
-          "time": 18.84,
+          "time": 19.45,
           "label": "FRAME 03",
           "src": "assets/frames/custom-mtko1ifz-03.jpg"
         },
         {
-          "time": 25.83,
+          "time": 25.1,
           "label": "FRAME 04",
           "src": "assets/frames/custom-mtko1ifz-04.jpg"
         }
       ],
-      "updatedAt": "2026-09-03T03:44:27.023Z"
+      "updatedAt": "2026-09-03T14:03:08.788Z"
+    },
+    "custom-mtllks9c": {
+      "frames": [
+        {
+          "time": 2.3,
+          "label": "FRAME 01",
+          "src": "assets/frames/custom-mtllks9c-01.jpg"
+        },
+        {
+          "time": 8.14,
+          "label": "FRAME 02",
+          "src": "assets/frames/custom-mtllks9c-02.jpg"
+        },
+        {
+          "time": 20.98,
+          "label": "FRAME 03",
+          "src": "assets/frames/custom-mtllks9c-03.jpg"
+        },
+        {
+          "time": 29.5,
+          "label": "FRAME 04",
+          "src": "assets/frames/custom-mtllks9c-04.jpg"
+        }
+      ],
+      "updatedAt": "2026-09-03T14:10:58.306Z"
+    },
+    "custom-mtlltzg5": {
+      "frames": [
+        {
+          "time": 1.85,
+          "label": "FRAME 01",
+          "src": "assets/frames/custom-mtlltzg5-01.jpg"
+        },
+        {
+          "time": 3.42,
+          "label": "FRAME 02",
+          "src": "assets/frames/custom-mtlltzg5-02.jpg"
+        },
+        {
+          "time": 10.69,
+          "label": "FRAME 03",
+          "src": "assets/frames/custom-mtlltzg5-03.jpg"
+        },
+        {
+          "time": 18.41,
+          "label": "FRAME 04",
+          "src": "assets/frames/custom-mtlltzg5-04.jpg"
+        }
+      ],
+      "updatedAt": "2026-09-03T14:13:09.359Z"
     }
   },
   "content": {
@@ -527,7 +577,10 @@
       "title": "合成镜头 1",
       "description": "",
       "order": 27,
-      "kicker": "CHARACTER COMPOSITE"
+      "kicker": "CHARACTER COMPOSITE",
+      "en": {
+        "group": "3D animation"
+      }
     },
     "xiaoyuan-2": {
       "group": "三维动画",
@@ -535,7 +588,10 @@
       "title": "合成镜头 2",
       "description": "",
       "order": 28,
-      "kicker": "CHARACTER COMPOSITE"
+      "kicker": "CHARACTER COMPOSITE",
+      "en": {
+        "group": "3D animation"
+      }
     },
     "micro-brazil": {
       "group": "三维实景合成",
@@ -581,18 +637,21 @@
       "group": "动态影像设计",
       "project": "Volvo × GolfBox",
       "title": "MG 动画演绎",
-      "description": "",
+      "description": "在汽车、运动和生活方式之间寻找视觉连接，用清晰的节奏完成从产品信息到生活场景的过渡。",
       "order": 8,
       "kicker": "MOTION GRAPHIC"
     },
     "end": {
       "group": "三维动画",
-      "project": "短片《末端派送》",
-      "title": "《末端派送》毕业设计",
+      "project": "《末端派送》",
+      "title": "《末端派送》三维剧情短片",
       "description": "2024.1 第十届北京市大学生动漫设计竞赛 动画类一等奖 \n2024.4 CSFC中国科幻大会 “萤火虫计划”优秀短片 \n2024.6 三十一届大学生电影节重新发现计划短片组最具潜力创意\n2025.11亚太青年微电影节",
       "order": 1,
       "kicker": "PERSONAL FILM",
-      "externalVideo": "https://www.bilibili.com/video/BV1KSqYYuEbY"
+      "externalVideo": "https://www.bilibili.com/video/BV1KSqYYuEbY",
+      "en": {
+        "group": "3D animation"
+      }
     },
     "uniqlo": {
       "group": "动态影像设计",
@@ -638,9 +697,16 @@
       "group": "三维动画",
       "project": "GQ × 回力新品发布会",
       "title": "GQ × 回力新品发布会",
-      "description": "",
+      "description": "以“出发”为概念，为GQ × 回力新品发布会打造的三维品牌视觉短片。作品将机场设施转化为红白视觉系统，通过产品陈列、动态镜头与节奏化转场，构建统一且具有记忆点的新品发布体验。",
       "order": 2,
-      "kicker": "3D ANIMATION"
+      "kicker": "3D ANIMATION",
+      "en": {
+        "group": "3D animation",
+        "project": "GQ × Warrior New Product Launch",
+        "title": "GQ × Warrior New Product Launch",
+        "kicker": "3D ANIMATION",
+        "description": "A 3D brand film created for the GQ × Warrior product launch. Built around the idea of “departure,” the project transforms airport imagery into a red-and-white visual system, combining product staging, dynamic camera movement, and rhythmic transitions into a cohesive launch experience."
+      }
     },
     "custom-mtb9okwb": {
       "group": "三维动画",
@@ -653,18 +719,52 @@
     },
     "custom-mtko1ifz": {
       "group": "AI内容生成",
-      "project": "《最后一件》原创概念时装短片",
-      "title": "《最后一件》",
+      "project": "《最后一件》",
+      "title": "《最后一件》品牌概念影像",
       "kicker": "THE LAST ITEM",
-      "description": "",
+      "description": "项目采用 AI 辅助的逐镜制作流程，通过角色、服装、场景与手袋参考图生成分镜和视频，并以连续性控制统一造型、材质与空间。快速剪辑、动态运镜和材质特写共同构成影片的视觉节奏。",
       "externalVideo": "",
       "order": 32,
       "en": {
-        "group": "AI-GenerateContext",
-        "project": "",
-        "title": "",
-        "kicker": "",
-        "description": ""
+        "group": "AI-generated context",
+        "project": "THE LAST ITEM",
+        "title": "THE LAST ITEM｜Brand Concept Film",
+        "kicker": "THE LAST ITEM",
+        "description": "The project was developed through an AI-assisted, shot-by-shot workflow. Character, garment, environment, and handbag references were used to generate the storyboards and video shots, while continuity control kept the styling, materials, and spatial relationships consistent. Fast editing, dynamic camera movement, and material close-ups shape the film’s visual rhythm."
+      },
+      "video": "AI生成时尚奢侈品包包广告.mp4",
+      "image": "assets/hero/AI生成时尚奢侈品包包广告.png"
+    },
+    "custom-mtllks9c": {
+      "group": "AI内容生成",
+      "project": "《南方失真档案》",
+      "title": "鹭岛残片",
+      "kicker": "Fragments of Xiamen",
+      "description": "项目采用真实照片驱动的 AI 图生视频方法，以静态街景作为空间与时代特征的视觉锚点，通过生成式模型补充镜头运动、人物活动与环境变化。不同地点的片段经过重新剪辑，并以过曝、黑场、失焦和低保真影像质感进行统一。",
+      "externalVideo": "",
+      "order": 33,
+      "en": {
+        "group": "AI-generated context",
+        "project": "Archives of a Distorted South",
+        "title": "Fragments of Xiamen",
+        "kicker": "CUSTOM WORK / NEW",
+        "description": "The project uses an AI image-to-video workflow driven by real photographs. Static street images serve as visual anchors for location and period, while generative models introduce camera movement, human activity, and environmental motion."
+      }
+    },
+    "custom-mtlltzg5": {
+      "group": "AI内容生成",
+      "project": "《南方失真档案》",
+      "title": "纬度故障",
+      "kicker": "Latitude Error",
+      "description": "项目以厦门真实城市照片作为场景结构，通过 AI 图生视频技术进行动态延展与冬季化重构，包括降雪、积雪覆盖、环境运动和镜头位移等视觉变化。",
+      "externalVideo": "",
+      "order": 34,
+      "en": {
+        "group": "AI-generated context",
+        "project": "Archives of a Distorted South",
+        "title": "Latitude Error",
+        "kicker": "Latitude Error",
+        "description": "Real photographs of Xiamen provide the structural foundation for the scenes. An AI image-to-video workflow is used to extend the still images into motion and reconstruct them under winter conditions, generating snowfall, accumulated snow, environmental movement, and simulated camera motion."
       }
     }
   },
@@ -725,7 +825,7 @@
       "group": "AI内容生成",
       "category": "custom",
       "kicker": "THE LAST ITEM",
-      "title": "《最后一件》原创概念时装短片",
+      "title": "《最后一件》",
       "subtitle": "《最后一件》THE LAST ITEM",
       "image": "assets/hero/AI生成时尚奢侈品包包广告.png",
       "video": "AI生成时尚奢侈品包包广告.mp4",
@@ -734,6 +834,40 @@
         "assets/hero/AI生成时尚奢侈品包包广告.png"
       ],
       "desc": "",
+      "tags": [],
+      "role": "视觉设计",
+      "format": "视频",
+      "year": "2026"
+    },
+    {
+      "id": "custom-mtllks9c",
+      "group": "AI内容生成",
+      "category": "custom",
+      "kicker": "CUSTOM WORK / NEW",
+      "title": "《南方失真档案》",
+      "subtitle": "《鹭岛残片》",
+      "image": "",
+      "video": "AI生成-鹭岛残片.mp4",
+      "externalVideo": "",
+      "frames": [],
+      "desc": "项目采用真实照片驱动的 AI 图生视频方法，以静态街景作为空间与时代特征的视觉锚点，通过生成式模型补充镜头运动、人物活动与环境变化。不同地点的片段经过重新剪辑，并以过曝、黑场、失焦和低保真影像质感进行统一。",
+      "tags": [],
+      "role": "视觉设计",
+      "format": "视频",
+      "year": "2026"
+    },
+    {
+      "id": "custom-mtlltzg5",
+      "group": "AI内容生成",
+      "category": "custom",
+      "kicker": "Latitude Error",
+      "title": "《南方失真档案》",
+      "subtitle": "纬度故障",
+      "image": "",
+      "video": "AI生成-纬度故障.mp4",
+      "externalVideo": "",
+      "frames": [],
+      "desc": "项目以厦门真实城市照片作为场景结构，通过 AI 图生视频技术进行动态延展与冬季化重构，包括降雪、积雪覆盖、环境运动和镜头位移等视觉变化。",
       "tags": [],
       "role": "视觉设计",
       "format": "视频",
