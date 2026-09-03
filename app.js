@@ -243,6 +243,21 @@ function readFrameSelections() {
   const baselineVersion = window.__PORTFOLIO_FRAME_SELECTIONS_VERSION__ || '';
   try {
     const stored = JSON.parse(localStorage.getItem(FRAME_STORAGE_KEY) || '{}');
+    // A custom project's selected-frame entry is intentionally removable from
+    // the bundled config.  Purge any older browser cache for that project so
+    // an obsolete Hero-library image cannot override its current cover.
+    const embeddedFrames = EMBEDDED_CONFIG.frames || {};
+    const customIds = Array.isArray(EMBEDDED_CONFIG.customProjects)
+      ? EMBEDDED_CONFIG.customProjects.map(project => project?.id).filter(Boolean)
+      : [];
+    let pruned = false;
+    customIds.forEach(id => {
+      if (!Object.prototype.hasOwnProperty.call(embeddedFrames, id) && Object.prototype.hasOwnProperty.call(stored, id)) {
+        delete stored[id];
+        pruned = true;
+      }
+    });
+    if (pruned) localStorage.setItem(FRAME_STORAGE_KEY, JSON.stringify(stored));
     if (baselineVersion && localStorage.getItem(FRAME_BASELINE_VERSION_KEY) !== baselineVersion) {
       const imported = {...stored, ...baseline};
       localStorage.setItem(FRAME_STORAGE_KEY, JSON.stringify(imported));
@@ -268,7 +283,26 @@ function readCustomProjects() {
   try {
     const raw = localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY);
     const value = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.customProjects || []);
-    return Array.isArray(value) ? value : [];
+    if (!Array.isArray(value)) return [];
+    // Keep media paths in sync with the bundled project library.  Older
+    // browser storage can contain a Hero-library cover that was later
+    // removed from the project; that stale value must not win over config.
+    const bundledById = new Map((EMBEDDED_CONFIG.customProjects || []).map(project => [project?.id, project]));
+    const merged = value.map(project => {
+      const bundled = bundledById.get(project?.id);
+      if (!bundled) return project;
+      return {
+        ...project,
+        image: bundled.image ?? project.image,
+        frames: Array.isArray(bundled.frames) ? bundled.frames : project.frames,
+        video: bundled.video ?? project.video,
+        externalVideo: bundled.externalVideo ?? project.externalVideo
+      };
+    });
+    if (raw !== null && JSON.stringify(merged) !== raw) {
+      localStorage.setItem(CUSTOM_PROJECTS_STORAGE_KEY, JSON.stringify(merged));
+    }
+    return merged;
   } catch { return Array.isArray(EMBEDDED_CONFIG.customProjects) ? EMBEDDED_CONFIG.customProjects : []; }
 }
 function readHiddenProjectIds() {
