@@ -240,7 +240,11 @@ let pendingVideoSrc = '';
 
 function readFrameSelections() {
   const baseline = {...(window.__PORTFOLIO_FRAME_SELECTIONS__ || {}), ...(EMBEDDED_CONFIG.frames || {})};
-  const baselineVersion = window.__PORTFOLIO_FRAME_SELECTIONS_VERSION__ || '';
+  // Use the exported config version as the cache baseline.  Local preview
+  // and GitHub Pages have different localStorage buckets; when a pushed
+  // config is newer, the bundled selections must replace an older browser
+  // selection instead of being shadowed by it.
+  const baselineVersion = String(window.__PORTFOLIO_FRAME_SELECTIONS_VERSION__ || EMBEDDED_CONFIG.version || '');
   try {
     const stored = JSON.parse(localStorage.getItem(FRAME_STORAGE_KEY) || '{}');
     // A custom project's selected-frame entry is intentionally removable from
