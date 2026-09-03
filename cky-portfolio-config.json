@@ -1,6 +1,6 @@
 {
-  "version": 74,
-  "exportedAt": "2026-09-03T15:03:25.813Z",
+  "version": 79,
+  "exportedAt": "2026-09-03T22:38:04.672Z",
   "frames": {
     "anne": {
       "frames": [
@@ -645,12 +645,16 @@
       "group": "三维动画",
       "project": "《末端派送》",
       "title": "《末端派送》三维剧情短片",
-      "description": "2024.1 第十届北京市大学生动漫设计竞赛 动画类一等奖 \n2024.4 CSFC中国科幻大会 “萤火虫计划”优秀短片 \n2024.6 三十一届大学生电影节重新发现计划短片组最具潜力创意\n2025.11亚太青年微电影节",
+      "description": "《末端派送》以星际物流为世界观基础，将漂浮舱站与异星机电景观转化为具有叙事功能的场景资产。两名长期协作的角色在共同执行任务的过程中彼此扶持，并完成一场关于陪伴与双向救赎的旅程。",
       "order": 1,
       "kicker": "PERSONAL FILM",
       "externalVideo": "https://www.bilibili.com/video/BV1KSqYYuEbY",
       "en": {
-        "group": "3D animation"
+        "group": "3D animation",
+        "project": "Personal film",
+        "title": "The Last Mile — Graduation Film",
+        "kicker": "PERSONAL FILM",
+        "description": "Last-Mile Delivery transforms an interstellar logistics system into a narrative environment built from floating stations and alien mechanical landscapes. While completing a final-mile assignment, two long-term collaborators support one another through adversity, turning the journey into a story of companionship and reciprocal redemption."
       }
     },
     "uniqlo": {
