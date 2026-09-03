@@ -211,3 +211,22 @@ html,body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:o
   .library-item { font-size:15px; }
   .hint { width:100%; margin:6px 0 0; }
 }
+
+/* VISIBILITY AND SITE COPY CONTROLS */
+.visibility-toggle { display:flex; align-items:center; gap:9px; width:max-content; max-width:100%; margin:0 0 24px; padding:9px 11px; border:1px solid #383b44; border-radius:8px; background:#0c0e13; color:#b8bbc4; font:12px/1.4 var(--ui-readable); cursor:pointer; }
+.visibility-toggle input { width:16px; height:16px; margin:0; accent-color:#6d58ff; cursor:pointer; }
+.visibility-toggle small { color:#777c88; font-size:11px; }
+.library-item.is-hidden { opacity:.58; color:#858a95; }
+.library-item.is-hidden:hover,.library-item.is-hidden.is-active { opacity:1; color:#c0baff; }
+.site-copy-editor { margin-top:24px; padding:18px; border:1px solid #383b46; border-radius:14px; background:linear-gradient(145deg,rgba(109,88,255,.055),rgba(10,12,17,.86) 52%); }
+.site-copy-editor .selected-heading { margin-top:0; }
+.project-visibility-control { display:flex; align-items:center; gap:12px; margin-top:24px; padding:13px 15px; border:1px solid #383b44; border-radius:10px; background:#0a0c10; color:#d2d4da; font:13px/1.5 var(--ui-readable); }
+.project-visibility-control small { color:#858a96; font-size:12px; }
+.switch-control { position:relative; display:inline-flex; flex:0 0 auto; width:44px; height:24px; margin-left:auto; }
+.switch-control input { position:absolute; opacity:0; width:1px; height:1px; }
+.switch-control i { position:absolute; inset:0; border:1px solid #545965; border-radius:999px; background:#242832; cursor:pointer; transition:.18s; }
+.switch-control i::after { content:""; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#989da8; transition:.18s; }
+.switch-control input:checked + i { border-color:#6d58ff; background:#33278d; }
+.switch-control input:checked + i::after { transform:translateX(20px); background:#fff; }
+.switch-control input:disabled + i { opacity:.4; cursor:not-allowed; }
+.switch-control input:focus-visible + i { outline:2px solid #8c7cff; outline-offset:3px; }

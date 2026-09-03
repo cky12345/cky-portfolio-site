@@ -32,6 +32,9 @@ function writeConfigArtifacts(merged) {
   const indexPath = path.join(root, 'index.html');
   const index = fs.readFileSync(indexPath, 'utf8').replace(/cky-portfolio-config-live\.js\?v=[^"']+/i, `cky-portfolio-config-live.js?v=${normalized.version}`);
   fs.writeFileSync(indexPath, index, 'utf8');
+  const selectorPath = path.join(root, 'frame-selector.html');
+  const selector = fs.readFileSync(selectorPath, 'utf8').replace(/cky-portfolio-config-live\.js\?v=[^"']+/i, `cky-portfolio-config-live.js?v=${normalized.version}`);
+  fs.writeFileSync(selectorPath, selector, 'utf8');
 }
 const mimeTypes = {
   '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8',

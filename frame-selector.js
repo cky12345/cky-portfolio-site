@@ -6,8 +6,12 @@ const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
 const AVATAR_STORAGE_KEY = 'cky-portfolio-avatar-config-v1';
+const SITE_STORAGE_KEY = 'cky-portfolio-site-config-v1';
+const SHOW_HIDDEN_STORAGE_KEY = 'cky-portfolio-show-hidden-projects-v1';
+const EMBEDDED_CONFIG = window.__CKY_PORTFOLIO_CONFIG__ || {};
 const DEFAULT_RESUME_CONFIG = { name:'陈坤勇_VOGUE定向简历.pdf', href:'陈坤勇_VOGUE定向简历.pdf' };
 const DEFAULT_AVATAR_CONFIG = { tilt:12, displacementScale:.45, background:'transparent' };
+const DEFAULT_SITE_CONFIG = { heroPeriod:{zh:'2021—2026', en:'2021—2026'} };
 const GROUP_PALETTE = ['#d1473f','#b8792b','#707d3d','#348071','#3f6fa2','#765b9c','#a64c78','#4c777c','#8b6544','#58616f'];
 // Defaults mirror the public site's bilingual labels, so the English editor
 // fields are pre-filled even for legacy entries without `content[id].en`.
@@ -118,15 +122,17 @@ const baseClips = [
   { group:'AI / 合成', project:'Microingredients', id:'micro-yunnan', title:'云南站 / 三维动画', video:'Microingredients三维动画云南站.mp4' }
 ];
 
-function readCustomProjects() { try { const value = JSON.parse(localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } }
-function readHiddenIds() { try { const value = JSON.parse(localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } }
+function readCustomProjects() { try { const raw = localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY); const value = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.customProjects || []); return Array.isArray(value) ? value : []; } catch { return Array.isArray(EMBEDDED_CONFIG.customProjects) ? EMBEDDED_CONFIG.customProjects : []; } }
+function readHiddenIds() { try { const raw = localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY); const value = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.hiddenIds || []); return Array.isArray(value) ? value : []; } catch { return Array.isArray(EMBEDDED_CONFIG.hiddenIds) ? EMBEDDED_CONFIG.hiddenIds : []; } }
+function readShowHiddenProjects() { try { return localStorage.getItem(SHOW_HIDDEN_STORAGE_KEY) === '1'; } catch { return false; } }
 let customProjects = readCustomProjects();
 let hiddenIds = readHiddenIds();
+let showHiddenProjects = readShowHiddenProjects();
 let clips = [];
 function refreshClips() {
   const hidden = new Set(hiddenIds);
   const customClips = customProjects.map(project => ({ group:project.group, project:project.title, id:project.id, title:project.subtitle, kicker:project.kicker, video:project.video, externalVideo:project.externalVideo, image:project.image, custom:true }));
-  clips = [...baseClips, ...customClips].filter(clip => !hidden.has(clip.id));
+  clips = [...baseClips, ...customClips].filter(clip => showHiddenProjects || !hidden.has(clip.id));
 }
 refreshClips();
 
@@ -189,6 +195,14 @@ const avatarDisplacementValue = document.querySelector('#avatar-displacement-val
 const avatarBackground = document.querySelector('#avatar-background');
 const avatarSettingsStatus = document.querySelector('#avatar-settings-status');
 const playerShell = document.querySelector('.player-shell');
+const showHiddenToggle = document.querySelector('#show-hidden-projects');
+const hiddenProjectCount = document.querySelector('#hidden-project-count');
+const siteHeroPeriodZh = document.querySelector('#site-hero-period-zh');
+const siteHeroPeriodEn = document.querySelector('#site-hero-period-en');
+const siteCopyStatus = document.querySelector('#site-copy-status');
+const deleteCurrentProjectButton = document.querySelector('#delete-current-project');
+const currentProjectVisible = document.querySelector('#current-project-visible');
+const currentProjectVisibilityStatus = document.querySelector('#current-project-visibility-status');
 const syncChannel = 'BroadcastChannel' in window ? new BroadcastChannel('cky-portfolio-sync') : null;
 let currentClip = null;
 let selections = readSelections();
@@ -196,6 +210,7 @@ let contentConfig = readContentConfig();
 let groupConfig = readGroupConfig();
 let resumeConfig = readResumeConfig();
 let avatarConfig = readAvatarConfig();
+let siteConfig = readSiteConfig();
 let isScrubbing = false;
 let pendingSeekTime = null;
 let seekFallbackTimer = null;
@@ -214,8 +229,15 @@ function readSelections() {
     return Object.keys(stored).length ? stored : baseline;
   } catch { return baseline; }
 }
-function readContentConfig() { try { return JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY) || '{}'); } catch { return {}; } }
-function readGroupConfig() { try { const parsed = JSON.parse(localStorage.getItem(GROUP_STORAGE_KEY) || '{}'); return {order:Array.isArray(parsed.order) ? parsed.order : [], colors:parsed.colors || {}}; } catch { return {order:[], colors:{}}; } }
+function readContentConfig() { try { const raw = localStorage.getItem(CONTENT_STORAGE_KEY); return raw !== null ? (JSON.parse(raw) || {}) : (EMBEDDED_CONFIG.content || {}); } catch { return EMBEDDED_CONFIG.content || {}; } }
+function readGroupConfig() { try { const raw = localStorage.getItem(GROUP_STORAGE_KEY); const parsed = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.groups || {}); return {order:Array.isArray(parsed.order) ? parsed.order : [], colors:parsed.colors || {}}; } catch { return EMBEDDED_CONFIG.groups || {order:[], colors:{}}; } }
+function readSiteConfig() {
+  try {
+    const raw = localStorage.getItem(SITE_STORAGE_KEY);
+    const parsed = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.site || {});
+    return {heroPeriod:{...DEFAULT_SITE_CONFIG.heroPeriod, ...(parsed?.heroPeriod || {})}};
+  } catch { return {...DEFAULT_SITE_CONFIG, heroPeriod:{...DEFAULT_SITE_CONFIG.heroPeriod}}; }
+}
 function readResumeConfig() { try { const parsed = JSON.parse(localStorage.getItem(RESUME_STORAGE_KEY) || 'null'); return parsed?.href ? parsed : DEFAULT_RESUME_CONFIG; } catch { return DEFAULT_RESUME_CONFIG; } }
 function readAvatarConfig() {
   try {
@@ -264,7 +286,7 @@ function getGroupNames() {
 }
 function getSortedClips() { const groups = getGroupNames(); return [...clips].sort((a,b) => groups.indexOf(getMeta(a).group) - groups.indexOf(getMeta(b).group) || getMeta(a).order - getMeta(b).order); }
 function announceSync(type='content') { syncChannel?.postMessage({type, at:Date.now()}); }
-function buildConfigPayload() { return { version:5, exportedAt:new Date().toISOString(), frames:selections, content:contentConfig, groups:groupConfig, customProjects, hiddenIds, resume:resumeConfig, avatar:avatarConfig }; }
+function buildConfigPayload() { return { version:5, exportedAt:new Date().toISOString(), frames:selections, content:contentConfig, groups:groupConfig, customProjects, hiddenIds, resume:resumeConfig, avatar:avatarConfig, site:siteConfig }; }
 let projectSyncTimer = 0;
 async function syncConfigToProjectFiles({silent=false} = {}) {
   try {
@@ -280,6 +302,7 @@ async function syncConfigToProjectFiles({silent=false} = {}) {
 function queueProjectSync() { clearTimeout(projectSyncTimer); projectSyncTimer = setTimeout(() => syncConfigToProjectFiles({silent:true}), 900); }
 function persistContent() { try { localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentConfig)); announceSync('content'); queueProjectSync(); } catch {} }
 function persistGroupConfig() { try { localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(groupConfig)); announceSync('groups'); queueProjectSync(); } catch {} }
+function persistSiteConfig() { try { localStorage.setItem(SITE_STORAGE_KEY, JSON.stringify(siteConfig)); announceSync('site'); queueProjectSync(); } catch {} }
 function persistResumeConfig() {
   try {
     localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(resumeConfig));
@@ -339,8 +362,11 @@ function formatTime(seconds) { if (!Number.isFinite(seconds)) return '00:00'; co
 
 function renderLibrary() {
   const groups = getSortedClips().reduce((acc, clip) => { const meta = getMeta(clip); (acc[meta.group] ||= []).push({clip, meta}); return acc; }, {});
-  library.innerHTML = Object.entries(groups).map(([group, items]) => `<div class="library-group"><div class="library-group-title"><span>${group}</span><span>${items.length}</span></div>${items.map(({clip,meta}) => `<button class="library-item" data-clip-id="${clip.id}"><span>${meta.project}<br /><b>${meta.title}</b></span><small>${selections[clip.id]?.frames?.length || 0} 帧</small></button>`).join('')}</div>`).join('');
+  const hidden = new Set(hiddenIds);
+  library.innerHTML = Object.entries(groups).map(([group, items]) => `<div class="library-group"><div class="library-group-title"><span>${escapeHtml(group)}</span><span>${items.length}</span></div>${items.map(({clip,meta}) => { const isHidden = hidden.has(clip.id); return `<button class="library-item${isHidden ? ' is-hidden' : ''}" data-clip-id="${escapeHtml(clip.id)}" aria-label="${escapeHtml(meta.title)}${isHidden ? '（已隐藏）' : ''}"><span>${escapeHtml(meta.project)}<br /><b>${escapeHtml(meta.title)}</b></span><small>${isHidden ? '已隐藏 · ' : ''}${selections[clip.id]?.frames?.length || 0} 帧</small></button>`; }).join('')}</div>`).join('');
   library.querySelectorAll('.library-item').forEach(button => { button.classList.toggle('is-active', currentClip?.id === button.dataset.clipId); button.addEventListener('click', () => selectClip(clips.find(clip => clip.id === button.dataset.clipId))); });
+  if (showHiddenToggle) showHiddenToggle.checked = showHiddenProjects;
+  if (hiddenProjectCount) hiddenProjectCount.textContent = hiddenIds.length ? `${hiddenIds.length} 个隐藏` : '';
 }
 
 function renderSelectedFrames() {
@@ -359,6 +385,17 @@ function selectClip(clip) {
   library.querySelectorAll('.library-item').forEach(item => item.classList.toggle('is-active', item.dataset.clipId === clip.id));
   editorKicker.textContent = `${meta.group} / ${meta.project}`;
   editorTitle.textContent = meta.title;
+  if (deleteCurrentProjectButton) {
+    const isHidden = hiddenIds.includes(clip.id);
+    deleteCurrentProjectButton.textContent = isHidden ? '显示当前作品' : '隐藏当前作品';
+    deleteCurrentProjectButton.classList.toggle('button-danger', !isHidden);
+    deleteCurrentProjectButton.classList.toggle('button-light', isHidden);
+  }
+  if (currentProjectVisible) {
+    currentProjectVisible.disabled = false;
+    currentProjectVisible.checked = !hiddenIds.includes(clip.id);
+  }
+  if (currentProjectVisibilityStatus) currentProjectVisibilityStatus.textContent = hiddenIds.includes(clip.id) ? '当前为隐藏状态' : '当前为显示状态';
   saveStatus.textContent = `${selections[clip.id]?.frames?.length || 0} 帧已保存`;
   if (![...metaGroup.options].some(option => option.value === meta.group)) metaGroup.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(meta.group)}">${escapeHtml(meta.group)}</option>`);
   if (![...metaProject.options].some(option => option.value === meta.project)) metaProject.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(meta.project)}">${escapeHtml(meta.project)}</option>`);
@@ -549,6 +586,7 @@ document.querySelector('#import-config').addEventListener('change', event => {
         groupConfig = payload.groups || {order:[],colors:{}};
         customProjects = Array.isArray(payload.customProjects) ? payload.customProjects : [];
         hiddenIds = Array.isArray(payload.hiddenIds) ? payload.hiddenIds : [];
+        siteConfig = payload.site ? {heroPeriod:{...DEFAULT_SITE_CONFIG.heroPeriod, ...(payload.site.heroPeriod || {})}} : readSiteConfig();
         resumeConfig = payload.resume?.href ? payload.resume : readResumeConfig();
         if (payload.resume?.href) persistResumeConfig();
         avatarConfig = payload.avatar ? {
@@ -558,6 +596,10 @@ document.querySelector('#import-config').addEventListener('change', event => {
         } : readAvatarConfig();
         if (payload.avatar) persistAvatarConfig();
         persistContent(); persistGroupConfig(); persistProjectLibrary();
+        if (payload.site) persistSiteConfig();
+        if (siteHeroPeriodZh) siteHeroPeriodZh.value = siteConfig.heroPeriod.zh;
+        if (siteHeroPeriodEn) siteHeroPeriodEn.value = siteConfig.heroPeriod.en;
+        if (siteCopyStatus) siteCopyStatus.textContent = '首页文案已从配置导入。';
       } else {
         selections = payload;
       }
@@ -766,6 +808,9 @@ function clearCurrentClip() {
   editorKicker.textContent = 'SELECT A CLIP';
   editorTitle.textContent = '从左侧选择片段';
   saveStatus.textContent = '未选择片段';
+  if (deleteCurrentProjectButton) { deleteCurrentProjectButton.textContent = '隐藏当前选中的作品'; deleteCurrentProjectButton.classList.add('button-danger'); deleteCurrentProjectButton.classList.remove('button-light'); }
+  if (currentProjectVisible) { currentProjectVisible.checked = false; currentProjectVisible.disabled = true; }
+  if (currentProjectVisibilityStatus) currentProjectVisibilityStatus.textContent = '选择作品后可切换';
   emptyPlayer.textContent = '选择一个片段开始选帧';
   emptyPlayer.parentElement.classList.remove('has-video');
   metaExternalVideo.value = '';
@@ -808,19 +853,63 @@ document.querySelector('#add-project').addEventListener('click', () => {
   addStatus.textContent = `已添加“${projectName} / ${title}”，主页会立即同步`;
   [addProject,addTitle,addKicker,addVideo,addExternalVideo,addImage,addDescription,addRole,addFormat,addTags].forEach(input => { input.value = ''; });
 });
-document.querySelector('#delete-current-project').addEventListener('click', () => {
+function setCurrentProjectVisibility(visible) {
+  if (!currentClip) return;
+  const meta = getMeta(currentClip);
+  if (visible) hiddenIds = hiddenIds.filter(id => id !== currentClip.id);
+  else if (!hiddenIds.includes(currentClip.id)) hiddenIds.push(currentClip.id);
+  persistProjectLibrary();
+  refreshClips();
+  renderLibrary();
+  populateMetaOptions();
+  const nextClip = clips.find(clip => clip.id === currentClip.id);
+  if (nextClip) selectClip(nextClip);
+  else clearCurrentClip();
+  addStatus.textContent = visible ? `已显示“${meta.project} / ${meta.title}”` : `已隐藏“${meta.project} / ${meta.title}”`;
+}
+currentProjectVisible?.addEventListener('change', () => {
+  if (!currentClip) return;
+  const visible = currentProjectVisible.checked;
+  if (!visible && !window.confirm('从主页隐藏当前作品？之后可通过“显示已隐藏作品”找回。')) {
+    currentProjectVisible.checked = true;
+    return;
+  }
+  setCurrentProjectVisibility(visible);
+});
+deleteCurrentProjectButton.addEventListener('click', () => {
   if (!currentClip) { addStatus.textContent = '请先从左侧选择要删除的作品'; return; }
   const meta = getMeta(currentClip);
-  if (!window.confirm(`从主页隐藏“${meta.project} / ${meta.title}”？之后可以点击“恢复已删除作品”找回。`)) return;
-  if (!hiddenIds.includes(currentClip.id)) hiddenIds.push(currentClip.id);
-  persistProjectLibrary(); refreshClips(); clearCurrentClip(); renderLibrary(); populateMetaOptions();
-  addStatus.textContent = `已隐藏“${meta.project} / ${meta.title}”`;
+  const isHidden = hiddenIds.includes(currentClip.id);
+  if (isHidden) {
+    setCurrentProjectVisibility(true);
+    return;
+  }
+  if (!window.confirm(`从主页隐藏“${meta.project} / ${meta.title}”？之后可开启“显示已隐藏作品”找回。`)) return;
+  setCurrentProjectVisibility(false);
 });
 document.querySelector('#restore-projects').addEventListener('click', () => {
-  if (!hiddenIds.length) { addStatus.textContent = '当前没有已删除的作品'; return; }
+  if (!hiddenIds.length) { addStatus.textContent = '当前没有已隐藏的作品'; return; }
   hiddenIds = [];
   persistProjectLibrary(); refreshClips(); renderLibrary(); populateMetaOptions();
+  if (currentClip) selectClip(clips.find(clip => clip.id === currentClip.id) || currentClip);
   addStatus.textContent = '已恢复全部隐藏作品';
+});
+showHiddenToggle?.addEventListener('change', () => {
+  showHiddenProjects = Boolean(showHiddenToggle.checked);
+  try { localStorage.setItem(SHOW_HIDDEN_STORAGE_KEY, showHiddenProjects ? '1' : '0'); } catch (_) {}
+  refreshClips();
+  renderLibrary();
+  populateMetaOptions();
+  if (currentClip && !clips.some(clip => clip.id === currentClip.id)) clearCurrentClip();
+});
+document.querySelector('#save-site-copy')?.addEventListener('click', () => {
+  const zh = siteHeroPeriodZh?.value.trim() || DEFAULT_SITE_CONFIG.heroPeriod.zh;
+  const en = siteHeroPeriodEn?.value.trim() || DEFAULT_SITE_CONFIG.heroPeriod.en;
+  siteConfig = {heroPeriod:{zh, en}};
+  persistSiteConfig();
+  if (siteHeroPeriodZh) siteHeroPeriodZh.value = zh;
+  if (siteHeroPeriodEn) siteHeroPeriodEn.value = en;
+  if (siteCopyStatus) siteCopyStatus.textContent = '首页文案已保存，并同步到作品集。';
 });
 function renderAvatarSettings() {
   avatarTilt.value = String(avatarConfig.tilt);
@@ -870,6 +959,9 @@ document.querySelector('#reset-resume').addEventListener('click', () => {
   resumeStatus.textContent = `当前使用：${DEFAULT_RESUME_CONFIG.name}`;
 });
 resumeStatus.textContent = `当前使用：${resumeConfig.name || DEFAULT_RESUME_CONFIG.name}`;
+if (siteHeroPeriodZh) siteHeroPeriodZh.value = siteConfig.heroPeriod.zh;
+if (siteHeroPeriodEn) siteHeroPeriodEn.value = siteConfig.heroPeriod.en;
+if (siteCopyStatus) siteCopyStatus.textContent = '当前使用已保存的首页文案。';
 renderAvatarSettings();
 updateProjectAdminOptions();
 renderLibrary();

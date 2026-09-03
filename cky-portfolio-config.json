@@ -1,6 +1,6 @@
 {
-  "version": 79,
-  "exportedAt": "2026-09-03T22:38:04.672Z",
+  "version": 93,
+  "exportedAt": "2026-09-03T23:21:18.050Z",
   "frames": {
     "anne": {
       "frames": [
@@ -466,7 +466,7 @@
   "content": {
     "anne": {
       "group": "三维实景合成",
-      "project": "《穿普拉达的女王2》",
+      "project": "穿普拉达的女王合成",
       "title": "Anne / 封面合成",
       "description": "",
       "order": 22,
@@ -474,7 +474,7 @@
     },
     "meryl": {
       "group": "三维实景合成",
-      "project": "《穿普拉达的女王2》",
+      "project": "穿普拉达的女王合成",
       "title": "Meryl / 封面合成",
       "description": "",
       "order": 22,
@@ -553,7 +553,10 @@
       "title": "科兰黎 VB 修复精华",
       "description": "",
       "order": 9,
-      "kicker": "AI + COMPOSITING"
+      "kicker": "AI + COMPOSITING",
+      "en": {
+        "group": "AI-assisted compositing"
+      }
     },
     "micro": {
       "group": "三维实景合成",
@@ -569,28 +572,40 @@
       "title": "溪木源 × One Piece",
       "description": "",
       "order": 26,
-      "kicker": "AI + COMPOSITING"
+      "kicker": "AI + COMPOSITING",
+      "en": {
+        "group": "AI-assisted compositing",
+        "project": "Simcare × One Piece",
+        "title": "AI 3D Composite",
+        "kicker": "AI + COMPOSITING",
+        "description": "An AI scene composite connecting a licensed IP, product material and motion."
+      }
     },
     "xiaoyuan-1": {
       "group": "三维动画",
-      "project": "小猿 IP 形象",
+      "project": "小猿IP合成",
       "title": "合成镜头 1",
       "description": "",
       "order": 27,
       "kicker": "CHARACTER COMPOSITE",
       "en": {
-        "group": "3D animation"
+        "group": "3D animation",
+        "project": "Xiaoyuan IP Composition",
+        "title": "Composite shot 1",
+        "kicker": "CHARACTER COMPOSITE",
+        "description": "Two character composites align scale, lighting and spatial relationships around the IP."
       }
     },
     "xiaoyuan-2": {
       "group": "三维动画",
-      "project": "小猿 IP 形象",
+      "project": "小猿IP合成",
       "title": "合成镜头 2",
       "description": "",
       "order": 28,
       "kicker": "CHARACTER COMPOSITE",
       "en": {
-        "group": "3D animation"
+        "group": "3D animation",
+        "project": "Xiaoyuan IP Composition"
       }
     },
     "micro-brazil": {
@@ -651,7 +666,7 @@
       "externalVideo": "https://www.bilibili.com/video/BV1KSqYYuEbY",
       "en": {
         "group": "3D animation",
-        "project": "Personal film",
+        "project": "The Last Mile",
         "title": "The Last Mile — Graduation Film",
         "kicker": "PERSONAL FILM",
         "description": "Last-Mile Delivery transforms an interstellar logistics system into a narrative environment built from floating stations and alien mechanical landscapes. While completing a final-mile assignment, two long-term collaborators support one another through adversity, turning the journey into a story of companionship and reciprocal redemption."
@@ -731,9 +746,9 @@
       "order": 32,
       "en": {
         "group": "AI-generated context",
-        "project": "THE LAST ITEM",
-        "title": "THE LAST ITEM｜Brand Concept Film",
-        "kicker": "THE LAST ITEM",
+        "project": "Last-Mile Delivery",
+        "title": "Graduation Project",
+        "kicker": "Last-Mile Delivery",
         "description": "The project was developed through an AI-assisted, shot-by-shot workflow. Character, garment, environment, and handbag references were used to generate the storyboards and video shots, while continuity control kept the styling, materials, and spatial relationships consistent. Fast editing, dynamic camera movement, and material close-ups shape the film’s visual rhythm."
       },
       "video": "AI生成时尚奢侈品包包广告.mp4",
@@ -879,7 +894,9 @@
     }
   ],
   "hiddenIds": [
-    "custom-mtb9okwb"
+    "custom-mtb9okwb",
+    "anne",
+    "meryl"
   ],
   "resume": {
     "name": "陈坤勇_VOGUE定向简历.pdf",
@@ -889,5 +906,11 @@
     "tilt": 12,
     "displacementScale": 0.5,
     "background": "transparent"
+  },
+  "site": {
+    "heroPeriod": {
+      "zh": "2026",
+      "en": "2026"
+    }
   }
 }

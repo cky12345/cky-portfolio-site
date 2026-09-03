@@ -48,6 +48,7 @@ const GROUP_STORAGE_KEY = 'cky-portfolio-group-config-v1';
 const CUSTOM_PROJECTS_STORAGE_KEY = 'cky-portfolio-custom-projects-v1';
 const HIDDEN_PROJECTS_STORAGE_KEY = 'cky-portfolio-hidden-projects-v1';
 const RESUME_STORAGE_KEY = 'cky-portfolio-resume-config-v1';
+const SITE_STORAGE_KEY = 'cky-portfolio-site-config-v1';
 // Bump the key so browsers that previously persisted an English choice get
 // the new Chinese-first default once. Future manual language choices persist
 // under this key as normal.
@@ -61,6 +62,7 @@ const normalizeResumeHref = value => {
   return /^resume\//i.test(clean) ? './' + clean : './resume/' + clean;
 };
 const EMBEDDED_CONFIG = window.__CKY_PORTFOLIO_CONFIG__ || {};
+const DEFAULT_SITE_CONFIG = { heroPeriod:{zh:'2021—2026', en:'2021—2026'} };
 // Local development helper: expose the active browser's editable configuration
 // for one-off migration from browser storage into the bundled config file.
 if (new URLSearchParams(location.search).has('dump-config')) {
@@ -70,7 +72,8 @@ if (new URLSearchParams(location.search).has('dump-config')) {
         content: JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY) || '{}'),
         groups: JSON.parse(localStorage.getItem(GROUP_STORAGE_KEY) || '{}'),
         customProjects: JSON.parse(localStorage.getItem(CUSTOM_PROJECTS_STORAGE_KEY) || '[]'),
-        hiddenIds: JSON.parse(localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY) || '[]')
+        hiddenIds: JSON.parse(localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY) || '[]'),
+        site: JSON.parse(localStorage.getItem(SITE_STORAGE_KEY) || JSON.stringify(EMBEDDED_CONFIG.site || DEFAULT_SITE_CONFIG))
       };
       console.log('CKY_CONFIG_DUMP', JSON.stringify(payload));
       document.documentElement.setAttribute('data-cky-config-dump', btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
@@ -87,13 +90,14 @@ const UI_COPY = {
   zh: {
     displayName:'陈坤勇',
     portraitRole:'视觉编辑 · 动效 · 三维',
-    navProfile:'Profile', navWork:'Selected work', navContact:'Contact',
+    navProfile:'简介', navWork:'作品', navContact:'联系',
     sidebarCopy:'把品牌、人物与产品，剪辑成有观点的视觉叙事。',
     heroTitle:'视觉作品集', heroLede:'视觉编辑、动态影像与三维合成。<br>为时尚内容与品牌项目建立准确、有节奏的视觉表达。', browse:'浏览精选项目',
     profileTitle:'技术是工具，<br><em>判断决定画面。</em>', profileIntro:'数字媒体艺术背景，具备从既定视觉方向延展、分镜与拍摄协作，到三维动画、实景合成、动态包装与后期交付的完整经验。长期参与 GQ 商业视觉项目，熟悉时尚内容、品牌权益与平台传播语境；我关心的不只是画面是否完成，更在意它是否准确、有节奏，并且始终保持视觉一致。',
     education:'中国传媒大学', degree:'数字媒体艺术 · 本科', skills:['动态影像','三维动画','实景合成','AI 内容生成'], approach:'从 brief 拆解、参考整理、<br class="mobile-approach-break" />分镜协作到执行、审核与多平台输出，<br class="approach-break" />我让品牌目标、观看节奏和画面质感形成统一表达。', viewWork:'查看精选作品 ↓', fullResume:'完整简历 ↗', downloadResume:'下载简历 ↓',
     workTitle:'看项目，也看思路。', workNote:'点击项目，查看关键帧与完整视频。', all:'全部', groupCapability:'能力 / 分组', project:'项目', projects:'项目', frames:'关键帧', selectedFrames:'已选帧', clips:'片段',
-    contactTitle:'让下一支片子<br><em>更有记忆点。</em>', contactCard:'CONTACT / 名片', email:'邮箱', phone:'电话', wechat:'微信', copyCard:'复制名片', copied:'已复制全部信息', copyFailed:'复制失败，请重试',
+     contactTitle:'让下一支片子<br><em>更有记忆点。</em>', contactCard:'CONTACT / 名片', email:'邮箱', phone:'电话', wechat:'微信', copyCard:'复制名片', copied:'已复制全部信息', copyFailed:'复制失败，请重试',
+     heroPeriod:'2021—2026',
     modalClose:'关闭项目详情', frameHint:'点击关键帧切换左侧主视觉', series:'系列', work:'作品', frameExplore:'移动浏览 ↔',
     videoLoading:'视频载入中…', playVideo:'播放项目视频', externalEmbed:'点击播放 Bilibili 视频', externalPage:'点击前往外部视频页面', videoPlay:'点击播放视频', noVideo:'暂未设置可播放的视频',
     languageLabel:'切换到 English'
@@ -106,8 +110,9 @@ const UI_COPY = {
     heroTitle:'Visual Portfolio', heroLede:'Visual editing, motion imagery and 3D compositing.<br>Precise, rhythmic visual language for fashion content and brand projects.', browse:'Browse selected work',
     profileTitle:'Technique is a tool,<br><em>judgement shapes the frame.</em>', profileIntro:'With a background in digital media art, I work across visual development, storyboards, shoot collaboration, 3D animation, live-action compositing, motion packaging and final delivery. I have contributed to GQ commercial visual projects and understand the language of fashion content, brand rights and platform distribution. The goal is not only to finish a frame, but to make it precise, rhythmic and visually consistent.',
     education:'Communication University of China', degree:'Digital Media Arts · B.A.', skills:['Motion imagery','3D animation','Live compositing','AI content'], approach:'From brief breakdown and reference curation<br class="mobile-approach-break" />to storyboard collaboration, execution, review and multi-platform delivery,<br class="approach-break" />I align brand intent, viewing rhythm and image texture.', viewWork:'View selected work ↓', fullResume:'Full résumé ↗', downloadResume:'Download résumé ↓',
-    workTitle:'Look at the work, then the thinking.', workNote:'Open a project to view key frames and the full video.', all:'All', groupCapability:'CAPABILITY / GROUP', project:'PROJECT', projects:'PROJECTS', frames:'FRAMES', selectedFrames:'SELECTED FRAMES', clips:'CLIPS',
-    contactTitle:'Make the next piece<br><em>more memorable.</em>', contactCard:'CONTACT / CARD', email:'Email', phone:'Phone', wechat:'WeChat', copyCard:'Copy contact', copied:'Contact copied', copyFailed:'Copy failed, try again',
+     workTitle:'Start with the work. Stay for the thinking.', workNote:'Open a project to view key frames and the full video.', all:'All', groupCapability:'CAPABILITY / GROUP', project:'PROJECT', projects:'PROJECTS', frames:'FRAMES', selectedFrames:'SELECTED FRAMES', clips:'CLIPS',
+     contactTitle:'Make the next piece<br><em>more memorable.</em>', contactCard:'CONTACT / CARD', email:'Email', phone:'Phone', wechat:'WeChat', copyCard:'Copy contact', copied:'Contact copied', copyFailed:'Copy failed, try again',
+     heroPeriod:'2021—2026',
     modalClose:'Close project details', frameHint:'Select a key frame to change the main visual', series:'SERIES', work:'WORK', frameExplore:'MOVE TO EXPLORE ↔',
     videoLoading:'Loading video…', playVideo:'Play project video', externalEmbed:'Click to play Bilibili video', externalPage:'Open external video page', videoPlay:'Click to play video', noVideo:'No playable video set',
     languageLabel:'切换到中文'
@@ -279,6 +284,18 @@ function readContentConfig() {
     const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
     return raw !== null ? (JSON.parse(raw) || {}) : (EMBEDDED_CONFIG.content || {});
   } catch { return EMBEDDED_CONFIG.content || {}; }
+}
+function readSiteConfig() {
+  try {
+    const raw = localStorage.getItem(SITE_STORAGE_KEY);
+    const parsed = raw !== null ? JSON.parse(raw) : (EMBEDDED_CONFIG.site || {});
+    return {heroPeriod:{...DEFAULT_SITE_CONFIG.heroPeriod, ...(parsed?.heroPeriod || {})}};
+  } catch { return {...DEFAULT_SITE_CONFIG, heroPeriod:{...DEFAULT_SITE_CONFIG.heroPeriod}}; }
+}
+function getSiteCopy(key) {
+  const site = readSiteConfig();
+  const value = site?.[key]?.[currentLanguage];
+  return typeof value === 'string' && value.trim() ? value.trim() : t(key);
 }
 function readGroupConfig() {
   try {
@@ -777,7 +794,9 @@ function applyLanguageUI() {
   set('.primary-nav a[href="#profile"]', `${t('navProfile')} <span>00</span>`, true);
   set('.primary-nav [data-work-nav]', `${t('navWork')} <span>01</span>`, true);
   set('.primary-nav a[href="#contact"]', `${t('navContact')} <span>02</span>`, true);
-  set('#hero-title', `<span class="proximity-line" data-variable-proximity>${t('heroTitle')}</span><br /><em class="proximity-line" data-variable-proximity>2021—2026</em>`, true);
+  const heroPeriod = getSiteCopy('heroPeriod');
+  set('#hero-title', `<span class="proximity-line" data-variable-proximity>${t('heroTitle')}</span><br /><em class="proximity-line" data-variable-proximity>${escapeHtml(heroPeriod)}</em>`, true);
+  document.querySelector('#hero-title')?.setAttribute('aria-label', `${t('heroTitle')} ${heroPeriod}`);
   window.CKYInitVariableProximity?.(document.querySelector('#hero-title'));
   set('.hero-lede', t('heroLede'), true); set('.scroll-cue span', t('browse'));
   set('#profile-title', t('profileTitle'), true); set('.profile-intro', t('profileIntro'));
@@ -804,7 +823,7 @@ function refreshContentView() {
   applyResumeConfig();
   applyLanguageUI();
 }
-window.addEventListener('storage', event => { if ([CONTENT_STORAGE_KEY, FRAME_STORAGE_KEY, GROUP_STORAGE_KEY, CUSTOM_PROJECTS_STORAGE_KEY, HIDDEN_PROJECTS_STORAGE_KEY, RESUME_STORAGE_KEY].includes(event.key)) refreshContentView(); });
+window.addEventListener('storage', event => { if ([CONTENT_STORAGE_KEY, FRAME_STORAGE_KEY, GROUP_STORAGE_KEY, CUSTOM_PROJECTS_STORAGE_KEY, HIDDEN_PROJECTS_STORAGE_KEY, RESUME_STORAGE_KEY, SITE_STORAGE_KEY].includes(event.key)) refreshContentView(); });
 syncChannel?.addEventListener('message', refreshContentView);
 window.addEventListener('pageshow', refreshContentView);
 window.addEventListener('focus', refreshContentView);

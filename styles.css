@@ -939,6 +939,27 @@ body { font-size:16px; -webkit-font-smoothing:antialiased; text-rendering:optimi
   }
 }
 
+/* Keep the English work heading from squeezing the note into a single-word
+   column on intermediate desktop widths. */
+@media (min-width:721px) {
+  .work-section .section-head {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(220px,260px);
+    align-items:end;
+  }
+  .work-section .section-head > div { min-width:0; }
+  .work-section .section-head h2 {
+    min-width:0;
+    white-space:normal;
+    text-wrap:balance;
+  }
+  .work-section .section-note {
+    width:100%;
+    max-width:260px;
+    justify-self:end;
+  }
+}
+
 /* MOBILE PORTRAIT CENTER */
 @media (max-width:720px) {
   .profile-portrait {

@@ -29,6 +29,9 @@ function writeConfigArtifacts(merged) {
   const indexPath = path.join(root, 'index.html');
   const index = fs.readFileSync(indexPath, 'utf8').replace(/cky-portfolio-config-live\.js\?v=[^"']+/i, `cky-portfolio-config-live.js?v=${normalized.version}`);
   fs.writeFileSync(indexPath, index, 'utf8');
+  const selectorPath = path.join(root, 'frame-selector.html');
+  const selector = fs.readFileSync(selectorPath, 'utf8').replace(/cky-portfolio-config-live\.js\?v=[^"']+/i, `cky-portfolio-config-live.js?v=${normalized.version}`);
+  fs.writeFileSync(selectorPath, selector, 'utf8');
 }
 http.createServer((request, response) => {
   if (request.method === 'OPTIONS' && request.url === '/__migrate-config') {
