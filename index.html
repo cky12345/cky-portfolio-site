@@ -65,7 +65,7 @@
         <figure class="profile-portrait">
           <div class="profile-avatar-depth" data-avatar-depth>
             <canvas class="profile-avatar-canvas" aria-label="陈坤勇三维深度肖像"></canvas>
-            <img class="profile-avatar-fallback" src="avatar-cutout.png" alt="陈坤勇个人肖像" />
+            <img class="profile-avatar-fallback" src="avatar-mobile.webp" alt="陈坤勇个人肖像" loading="lazy" />
             <div class="profile-avatar-glass" aria-hidden="true"></div>
           </div>
           <figcaption><span>CKY / PORTRAIT 2026</span><span>视觉编辑 · 动效 · 三维</span></figcaption>
@@ -108,15 +108,27 @@
       <div class="modal-meta"><span id="modal-role"></span><span id="modal-format"></span><span id="modal-year"></span></div>
     </div>
   </div>
-  <script src="cky-portfolio-config.js?v=1"></script>
-  <script src="cky-portfolio-config-live.js?v=2"></script>
-    <script src="portfolio-frame-selections-data.js?v=2"></script>
+  <script src="cky-portfolio-config-live.js?v=23"></script>
   <script src="pixel-blast.js?v=6"></script>
   <script src="fluid-glass.js?v=2"></script>
   <script src="variable-proximity.js?v=4"></script>
-  <script src="vendor/three.min.js?v=160"></script>
-  <script src="avatar-assets.js?v=3"></script>
-    <script src="avatar-depth.js?v=9"></script>
+  <script>
+    // The 3D portrait is a desktop enhancement. Keep mobile startup light
+    // and show the compressed fallback portrait instead.
+    if (window.matchMedia('(min-width: 821px)').matches) {
+      const loadScript = src => new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+      loadScript('vendor/three.min.js?v=160')
+        .then(() => loadScript('avatar-assets.js?v=3'))
+        .then(() => loadScript('avatar-depth.js?v=9'))
+        .catch(() => {});
+    }
+  </script>
   <script src="resume-download.js?v=1"></script>
   <script src="app.js?v=26"></script>
 </body>

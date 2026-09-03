@@ -6,9 +6,32 @@ const root = path.resolve(__dirname);
 const host = '127.0.0.1';
 const port = 8000;
 const configPath = path.join(root, 'cky-portfolio-config.json');
+const frameAssetDir = path.join(root, 'assets', 'frames');
+function materializeFrameSelections(config) {
+  fs.mkdirSync(frameAssetDir, {recursive:true});
+  for (const [id, entry] of Object.entries(config.frames || {})) {
+    if (!Array.isArray(entry?.frames)) continue;
+    entry.frames = entry.frames.map((item, index) => {
+      if (!item || typeof item.dataUrl !== 'string' || !item.dataUrl.startsWith('data:image/')) return item;
+      const match = /^data:image\/([a-z0-9.+-]+);base64,(.*)$/i.exec(item.dataUrl);
+      if (!match) return item;
+      const extension = match[1].toLowerCase() === 'jpeg' ? 'jpg' : match[1].toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin';
+      const filename = `${String(id).replace(/[^a-z0-9_-]+/gi, '_')}-${String(index + 1).padStart(2, '0')}.${extension}`;
+      fs.writeFileSync(path.join(frameAssetDir, filename), Buffer.from(match[2], 'base64'));
+      const next = {...item, src:`assets/frames/${filename}`};
+      delete next.dataUrl;
+      return next;
+    });
+  }
+  return config;
+}
 function writeConfigArtifacts(merged) {
-  fs.writeFileSync(configPath, JSON.stringify(merged, null, 2), 'utf8');
-  fs.writeFileSync(path.join(root, 'cky-portfolio-config-live.js'), `window.__CKY_PORTFOLIO_CONFIG__ = ${JSON.stringify(merged)};`, 'utf8');
+  const normalized = materializeFrameSelections(merged);
+  fs.writeFileSync(configPath, JSON.stringify(normalized, null, 2), 'utf8');
+  fs.writeFileSync(path.join(root, 'cky-portfolio-config-live.js'), `window.__CKY_PORTFOLIO_CONFIG__ = ${JSON.stringify(normalized)};`, 'utf8');
+  const indexPath = path.join(root, 'index.html');
+  const index = fs.readFileSync(indexPath, 'utf8').replace(/cky-portfolio-config-live\.js\?v=[^"']+/i, `cky-portfolio-config-live.js?v=${normalized.version}`);
+  fs.writeFileSync(indexPath, index, 'utf8');
 }
 const mimeTypes = {
   '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8',
